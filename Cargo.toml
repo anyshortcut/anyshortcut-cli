@@ -1,0 +1,6 @@
+[package]
+name = "anyshortcut-cli"
+version = "0.1.0"
+authors = ["Folyd <lyshuhow@gmail.com>"]
+
+[dependencies]
