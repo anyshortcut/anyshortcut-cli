@@ -2,5 +2,8 @@
 name = "anyshortcut-cli"
 version = "0.1.0"
 authors = ["Folyd <lyshuhow@gmail.com>"]
+description="A blaze fast way to launch your favorite website in Terminal."
+homepage = "https://github.com/anyshortcut/anyshortcut-cli"
 
 [dependencies]
+clap = "2.31.2"
