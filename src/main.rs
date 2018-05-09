@@ -20,6 +20,14 @@ fn main() {
         .max_term_width(90)
         .help_message("Print this help message.")
         .version_message("Show version information.")
+        .args(&[
+            Arg::with_name("PRIMARY_KEY | COMPOUND_KEY")
+                .help("Using primary shortcut key (A~Z|0~9) or compound shortcut key (AA~ZZ) to open the url.")
+                .index(1),
+            Arg::with_name("SECONDARY_KEY")
+                .help("Use secondary shortcut key (A~Z|0~9) to open the url.")
+                .index(2),
+        ])
         .subcommand(
             SubCommand::with_name("login")
                 .about("Login with the token")
