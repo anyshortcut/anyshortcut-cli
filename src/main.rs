@@ -21,10 +21,12 @@ fn main() {
         .help_message("Print this help message.")
         .version_message("Show version information.")
         .args(&[
-            Arg::with_name("PRIMARY_KEY | COMPOUND_KEY")
+            Arg::with_name("primary_key")
+                .value_name("PRIMARY_KEY | COMPOUND_KEY")
                 .help("Using primary shortcut key (A~Z|0~9) or compound shortcut key (AA~ZZ) to open the url.")
                 .index(1),
-            Arg::with_name("SECONDARY_KEY")
+            Arg::with_name("secondary_key")
+                .value_name("SECONDARY_KEY")
                 .help("Use secondary shortcut key (A~Z|0~9) to open the url.")
                 .index(2),
         ])
@@ -32,17 +34,15 @@ fn main() {
             SubCommand::with_name("login")
                 .about("Login with the token")
                 .arg(
-                    Arg::with_name("TOKEN")
+                    Arg::with_name("token")
+                        .value_name("TOKEN")
                         .help("[TOKEN] obtained from user dashboard.")
+                        .takes_value(true)
                         .empty_values(false)),
         )
         .subcommand(
             SubCommand::with_name("sync")
                 .about("Sync all shortcuts after login."),
-        )
-        .subcommand(
-            SubCommand::with_name("check")
-                .about("Check a shortcut detail."),
         )
         .subcommand(
             SubCommand::with_name("list")
@@ -51,6 +51,7 @@ fn main() {
                     Arg::with_name("primary")
                         .long("primary")
                         .short("p")
+                        .conflicts_with_all(&["secondary","compound"])
                         .help("List all primary shortcuts."),
                 )
                 .arg(
