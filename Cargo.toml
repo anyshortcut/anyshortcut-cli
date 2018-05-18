@@ -6,4 +6,7 @@ description="A blaze fast way to launch your favorite website in Terminal."
 homepage = "https://github.com/anyshortcut/anyshortcut-cli"
 
 [dependencies]
+failure = "0.1.1"
+error-chain = "0.11"
 clap = "2.31.2"
+open = "1.2.1"

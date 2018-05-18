@@ -1,9 +1,14 @@
+extern crate failure;
 #[macro_use]
 extern crate clap;
+extern crate open;
 
+use std::process;
 use clap::{App, AppSettings, Arg, SubCommand};
 
 mod cli;
+mod commands;
+mod utils;
 
 fn main() {
     let matches = App::new(crate_name!())
@@ -73,5 +78,10 @@ fn main() {
         )
         .get_matches();
 
-    cli::handle_matches(&matches);
+    match cli::handle_matches(&matches) {
+        Ok(()) => process::exit(0),
+        Err(err) => {
+            process::exit(1);            
+        }
+    };
 }

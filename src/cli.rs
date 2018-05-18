@@ -1,11 +1,14 @@
 use clap::ArgMatches;
+use failure::Error;
 
-pub fn handle_matches(matches: &ArgMatches) {
+use commands::{ login };
+
+pub fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
     println!("{:?}", &matches);
 
     match matches.subcommand() {
         ("login", Some(login_matches)) => {
-            println!("login:{:?}", login_matches.value_of("token"));
+            login::execute(&login_matches)?
         }
         ("logout", Some(logout_matches)) => {
             println!("logout:{:?}", logout_matches);
@@ -34,4 +37,6 @@ pub fn handle_matches(matches: &ArgMatches) {
             }
         }
     };
+
+    Ok(())
 }
