@@ -1,27 +1,21 @@
 use clap::ArgMatches;
 use failure::Error;
 
-use commands::{ login };
+use commands::{ login, logout, sync, list };
 
 pub fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
-    println!("{:?}", &matches);
-
     match matches.subcommand() {
         ("login", Some(login_matches)) => {
             login::execute(&login_matches)?
         }
         ("logout", Some(logout_matches)) => {
-            println!("logout:{:?}", logout_matches);
+            logout::execute(&logout_matches)?
         }
-        ("list", Some(logout_matches)) => {
-            println!("list:{:?}", logout_matches);
-            if logout_matches.is_present("primary") {
-                println!("Print all primary shortcuts");
-            } else if logout_matches.is_present("secondary") {
-                println!("Print all secondary shortcuts");
-            } else if logout_matches.is_present("compound") {
-                println!("Print all compound shortcuts");
-            }
+        ("sync", Some(sync_matches)) => {
+            sync::execute(&sync_matches)?
+        }
+        ("list", Some(list_matches)) => {
+            list::execute(&list_matches)?
         }
         _ => {
             if matches.is_present("primary_key") {
