@@ -18,3 +18,17 @@ pub fn prompt_to_continue(message: &str) -> io::Result<bool> {
         println!("invalid input!");
     }
 }
+
+pub fn prompt(message: &str) -> io::Result<String> {
+    loop {
+        print!("{}", message);
+        io::stdout().flush()?;
+
+        let mut buffer = String::new();
+        io::stdin().read_line(&mut buffer)?;
+        let input = buffer.trim();
+        if input.len() > 0 {
+            return Ok(input.to_owned());
+        }
+    }
+}
