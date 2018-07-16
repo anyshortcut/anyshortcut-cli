@@ -1,8 +1,8 @@
 use curl;
 use std;
-use std::io::{Read, Write};
 use std::cell::{RefCell, RefMut};
 use std::fmt;
+use std::io::{Read, Write};
 
 /// Shortcut alias for results of this module.
 pub type Result<T> = std::result::Result<T, Error>;
@@ -59,6 +59,7 @@ impl Client {
 pub struct Request<'a> {
     handle: RefMut<'a, curl::easy::Easy>,
     headers: curl::easy::List,
+    url: String,
     body: Option<Vec<u8>>,
 }
 
@@ -83,11 +84,10 @@ impl<'a> Request<'a> {
             Method::Delete => handle.custom_request("DELETE")?,
         }
 
-        handle.url(url)?;
-
         Ok(Request {
             handle,
             headers,
+            url: url.to_string(),
             body: None,
         })
     }
@@ -97,10 +97,17 @@ impl<'a> Request<'a> {
         Ok(self)
     }
 
+    pub fn with_arguments(mut self, args: &str) -> Result<Request<'a>> {
+        self.url = format!("{}?{}", self.url, args);
+        Ok(self)
+    }
+
+
     /// Sends the request and reads the response body into the response object.
     pub fn send(mut self) -> Result<Response> {
-        // self.handle.verbose(true)?;
+        self.handle.verbose(true)?;
         self.handle.http_headers(self.headers)?;
+        self.handle.url(&self.url)?;
 
         match self.body {
             Some(ref body) => {
