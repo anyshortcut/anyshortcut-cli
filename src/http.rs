@@ -34,15 +34,13 @@ impl fmt::Display for Method {
 pub struct Client {
     shared_handle: RefCell<curl::easy::Easy>,
     base_url: String,
-    token: String,
 }
 
 impl Client {
-    pub fn new(base_url: &str, token: &str) -> Client {
+    pub fn new(base_url: &str) -> Client {
         Client {
             shared_handle: RefCell::new(curl::easy::Easy::new()),
             base_url: base_url.to_string(),
-            token: token.to_string(),
         }
     }
 
@@ -101,7 +99,7 @@ impl<'a> Request<'a> {
 
     /// Sends the request and reads the response body into the response object.
     pub fn send(mut self) -> Result<Response> {
-        self.handle.verbose(true)?;
+        // self.handle.verbose(true)?;
         self.handle.http_headers(self.headers)?;
 
         match self.body {
