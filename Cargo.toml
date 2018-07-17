@@ -7,7 +7,7 @@ homepage = "https://github.com/anyshortcut/anyshortcut-cli"
 
 [dependencies]
 failure = "0.1.1"
-error-chain = "0.11"
+failure_derive = "0.1.1"
 clap = "2.31.2"
 curl = "0.4.12"
 open = "1.2.1"

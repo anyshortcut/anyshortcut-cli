@@ -1,6 +1,10 @@
 #[macro_use]
 extern crate clap;
 extern crate curl;
+#[macro_use]
+extern crate failure;
+#[macro_use]
+extern crate failure_derive;
 extern crate open;
 
 use clap::{App, AppSettings, Arg, SubCommand};

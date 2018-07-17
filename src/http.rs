@@ -1,4 +1,6 @@
 use curl;
+use failure;
+use failure::{Backtrace, Context, Fail};
 use std;
 use std::cell::{RefCell, RefMut};
 use std::fmt;
@@ -180,23 +182,56 @@ impl Response {
     }
 }
 
-#[derive(Debug)]
-pub struct Error {}
-
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
 pub enum ErrorKind {
+    #[fail(display = "Invalid access token.")]
     InvalidToken,
+
+    #[fail(display = "Request failed")]
     RequestFailed,
+}
+
+#[derive(Debug)]
+pub struct Error {
+    inner: Context<ErrorKind>,
+}
+
+impl self::Error {
+    pub fn kind(&self) -> ErrorKind {
+        *self.inner.get_context()
+    }
+}
+
+impl Fail for self::Error {
+    fn cause(&self) -> Option<&Fail> {
+        self.inner.cause()
+    }
+
+    fn backtrace(&self) -> Option<&Backtrace> {
+        self.inner.backtrace()
+    }
 }
 
 impl fmt::Display for self::Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Display::fmt("Http error", f)
+        fmt::Display::fmt(&self.inner, f)
+    }
+}
+
+impl From<ErrorKind> for self::Error {
+    fn from(kind: ErrorKind) -> self::Error {
+        self::Error { inner: Context::new(kind) }
+    }
+}
+
+impl From<Context<ErrorKind>> for self::Error {
+    fn from(inner: Context<ErrorKind>) -> self::Error {
+        self::Error { inner }
     }
 }
 
 impl From<curl::Error> for self::Error {
-    fn from(error: curl::Error) -> Error {
-        Error {}
+    fn from(error: curl::Error) -> self::Error {
+        failure::Error::from(error).context(ErrorKind::RequestFailed).into()
     }
 }
