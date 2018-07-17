@@ -5,7 +5,7 @@ use std::fmt;
 use std::io::{Read, Write};
 
 /// Shortcut alias for results of this module.
-pub type Result<T> = std::result::Result<T, Error>;
+pub type Result<T> = std::result::Result<T, self::Error>;
 
 #[derive(PartialEq, Debug)]
 pub enum Method {
@@ -44,7 +44,7 @@ impl Client {
         }
     }
 
-    fn request(&self, endpoint: &str, method: Method) -> Result<Request> {
+    pub fn request(&self, method: Method, endpoint: &str) -> Result<Request> {
         let url = format!("{}{}", self.base_url, endpoint);
         let mut handle = self.shared_handle.borrow_mut();
         handle.reset();
@@ -52,7 +52,11 @@ impl Client {
     }
 
     pub fn get(&self, endpoint: &str) -> Result<Response> {
-        self.request(endpoint, Method::Get)?.send()
+        self.request(Method::Get, endpoint)?.send()
+    }
+
+    pub fn delete(&self, endpoint: &str) -> Result<Response> {
+        self.request(Method::Delete, endpoint)?.send()
     }
 }
 
@@ -102,10 +106,8 @@ impl<'a> Request<'a> {
         Ok(self)
     }
 
-
     /// Sends the request and reads the response body into the response object.
     pub fn send(mut self) -> Result<Response> {
-        self.handle.verbose(true)?;
         self.handle.http_headers(self.headers)?;
         self.handle.url(&self.url)?;
 
@@ -187,13 +189,13 @@ pub enum ErrorKind {
     RequestFailed,
 }
 
-impl fmt::Display for Error {
+impl fmt::Display for self::Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         fmt::Display::fmt("Http error", f)
     }
 }
 
-impl From<curl::Error> for Error {
+impl From<curl::Error> for self::Error {
     fn from(error: curl::Error) -> Error {
         Error {}
     }

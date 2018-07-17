@@ -1,13 +1,15 @@
-extern crate failure;
 #[macro_use]
 extern crate clap;
+extern crate curl;
 extern crate open;
 
-use std::process;
 use clap::{App, AppSettings, Arg, SubCommand};
+use std::process;
 
+mod api;
 mod cli;
 mod commands;
+mod http;
 mod utils;
 
 fn main() {
@@ -56,7 +58,7 @@ fn main() {
                     Arg::with_name("primary")
                         .long("primary")
                         .short("p")
-                        .conflicts_with_all(&["secondary","compound"])
+                        .conflicts_with_all(&["secondary", "compound"])
                         .help("List all primary shortcuts."),
                 )
                 .arg(
@@ -81,7 +83,7 @@ fn main() {
     match cli::handle_matches(&matches) {
         Ok(()) => process::exit(0),
         Err(err) => {
-            process::exit(1);            
+            process::exit(1);
         }
     };
 }
