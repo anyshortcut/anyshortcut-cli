@@ -40,8 +40,8 @@ impl Api {
         API.with(|api| api.clone())
     }
 
-    pub fn login_with_token(&self, token: &str) -> http::Result<Response> {
-        self.client.get("/login")
+    pub fn login_with_access_token(&self, access_token: &str) -> http::Result<Response> {
+        self.client.get(&format!("/user/login?access_token={}", access_token))
     }
 }
 
