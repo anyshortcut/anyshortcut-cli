@@ -155,7 +155,7 @@ fn handle_request(
     Ok(Response {
         status: handle.response_code()?,
         headers: response_headers,
-        body: Some(response_body),
+        body: Some(String::from_utf8_lossy(&response_body).into_owned()),
     })
 }
 
@@ -165,7 +165,7 @@ pub type HttpStatus = u32;
 pub struct Response {
     status: HttpStatus,
     headers: Vec<String>,
-    body: Option<Vec<u8>>,
+    body: Option<String>,
 }
 
 impl Response {
