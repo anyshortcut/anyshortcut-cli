@@ -6,6 +6,11 @@ extern crate failure;
 #[macro_use]
 extern crate failure_derive;
 extern crate open;
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
+#[macro_use]
+extern crate serde_json;
 
 use clap::{App, AppSettings, Arg, SubCommand};
 use std::process;

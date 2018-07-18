@@ -5,6 +5,8 @@ use std;
 use std::cell::{RefCell, RefMut};
 use std::fmt;
 use std::io::{Read, Write};
+use serde::Serialize;
+use serde_json;
 
 /// Shortcut alias for results of this module.
 pub type Result<T> = std::result::Result<T, self::Error>;
@@ -57,6 +59,18 @@ impl Client {
         self.request(Method::Get, endpoint)?.send()
     }
 
+    pub fn post<S: Serialize>(&self, endpoint: &str, body: &S) -> Result<Response> {
+        self.request(Method::Post, endpoint)?
+            .with_json_body(body)?
+            .send()
+    }
+
+    pub fn put<S: Serialize>(&self, endpoint: &str, body: &S) -> Result<Response> {
+        self.request(Method::Put, endpoint)?
+            .with_json_body(body)?
+            .send()
+    }
+
     pub fn delete(&self, endpoint: &str) -> Result<Response> {
         self.request(Method::Delete, endpoint)?.send()
     }
@@ -105,6 +119,17 @@ impl<'a> Request<'a> {
 
     pub fn with_arguments(mut self, args: &str) -> Result<Request<'a>> {
         self.url = format!("{}?{}", self.url, args);
+        Ok(self)
+    }
+
+    /// sets the JSON request body for the request.
+    pub fn with_json_body<S: Serialize>(mut self, body: &S) -> Result<Request<'a>> {
+        let mut body_bytes: Vec<u8> = vec![];
+        // Serialize json object to bytes
+        serde_json::to_writer(&mut body_bytes, &body)?;
+
+        self.body = Some(body_bytes);
+        self.headers.append("Content-Type: application/json")?;
         Ok(self)
     }
 
