@@ -3,12 +3,13 @@ use failure;
 // Magic failure::ResultExt which has context method
 // and implements for std::result::Result
 use failure::{Backtrace, Context, Fail, ResultExt};
+use serde::de::DeserializeOwned;
+use serde::Serialize;
+use serde_json;
 use std;
 use std::cell::{RefCell, RefMut};
 use std::fmt;
 use std::io::{Read, Write};
-use serde::Serialize;
-use serde_json;
 
 /// Shortcut alias for results of this module.
 pub type Result<T> = std::result::Result<T, self::Error>;
@@ -208,6 +209,14 @@ impl Response {
     pub fn ok(&self) -> bool {
         !self.failed()
     }
+
+    /// Deserialize the response body into the given type
+    pub fn deserialize<T: DeserializeOwned>(&self) -> Result<T> {
+        Ok(serde_json::from_reader(match self.body {
+            Some(ref body) => body,
+            None => &b""[..],
+        }).context(ErrorKind::InvalidJson)?)
+    }
 }
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
@@ -218,6 +227,8 @@ pub enum ErrorKind {
     RequestFailed,
     #[fail(display = "Could not serialize value as JSON")]
     InvalidJsonBody,
+    #[fail(display = "Could not parse JSON response")]
+    InvalidJson,
 }
 
 #[derive(Debug)]
