@@ -1,6 +1,8 @@
 use curl;
 use failure;
-use failure::{Backtrace, Context, Fail};
+// Magic failure::ResultExt which has context method
+// and implements for std::result::Result
+use failure::{Backtrace, Context, Fail, ResultExt};
 use std;
 use std::cell::{RefCell, RefMut};
 use std::fmt;
@@ -126,7 +128,8 @@ impl<'a> Request<'a> {
     pub fn with_json_body<S: Serialize>(mut self, body: &S) -> Result<Request<'a>> {
         let mut body_bytes: Vec<u8> = vec![];
         // Serialize json object to bytes
-        serde_json::to_writer(&mut body_bytes, &body)?;
+        serde_json::to_writer(&mut body_bytes, &body)
+            .context(ErrorKind::InvalidJsonBody)?;
 
         self.body = Some(body_bytes);
         self.headers.append("Content-Type: application/json")?;
@@ -211,9 +214,10 @@ impl Response {
 pub enum ErrorKind {
     #[fail(display = "Invalid access token.")]
     InvalidToken,
-
     #[fail(display = "Request failed")]
     RequestFailed,
+    #[fail(display = "Could not serialize value as JSON")]
+    InvalidJsonBody,
 }
 
 #[derive(Debug)]
