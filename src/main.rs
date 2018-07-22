@@ -21,6 +21,8 @@ mod cli;
 mod commands;
 mod http;
 mod utils;
+mod store;
+mod models;
 
 fn main() {
     let matches = App::new(crate_name!())
