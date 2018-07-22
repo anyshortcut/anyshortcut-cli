@@ -1,14 +1,9 @@
 use failure::Fail;
-use http;
 use http::{Client, Response, Result};
-use serde::de::Deserialize;
-use serde::Serialize;
 use serde_json;
 use std::fmt;
 use std::rc::Rc;
-
-static API_URL: &'static str = "https://api.anyshortcut.com";
-
+use constants;
 thread_local! {
     static API: Rc<Api> = Rc::new(Api::new());
 }
@@ -51,21 +46,21 @@ pub enum ApiErrorKind {
 
 impl fmt::Display for ApiResponse {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{{");
-        write!(f, "\n  code: {},", self.code);
-        write!(f, "\n  data: {},", self.data);
-        write!(f, "\n  message: {}", self.message);
-        write!(f, "\n}}");
+        write!(f, "{{")?;
+        write!(f, "\n  code: {},", self.code)?;
+        write!(f, "\n  data: {},", self.data)?;
+        write!(f, "\n  message: {}", self.message)?;
+        write!(f, "\n}}")?;
         Ok(())
     }
 }
 
 impl fmt::Display for ApiError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{{");
-        write!(f, "\n  code: {},", self.code);
-        write!(f, "\n  message: {}", self.message);
-        write!(f, "\n}}");
+        write!(f, "{{")?;
+        write!(f, "\n  code: {},", self.code)?;
+        write!(f, "\n  message: {}", self.message)?;
+        write!(f, "\n}}")?;
         Ok(())
     }
 }
@@ -87,7 +82,7 @@ pub struct Api {
 impl Api {
     pub fn new() -> Api {
         Api {
-            client: Client::new(API_URL),
+            client: Client::new(constants::API_URL),
             token: None,
         }
     }
@@ -98,7 +93,6 @@ impl Api {
     }
 
     pub fn login_with_access_token(&self, access_token: &str) -> Result<serde_json::Value> {
-        let json = json!({ "name": "a" });
         let response = self.client.get(&format!("/user/login?access_token={}", access_token))?;
         self.handle_http_response(response)
     }

@@ -16,6 +16,7 @@ use clap::{App, AppSettings, Arg, SubCommand};
 use std::process;
 
 mod api;
+mod constants;
 mod cli;
 mod commands;
 mod http;
