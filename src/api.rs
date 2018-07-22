@@ -1,5 +1,10 @@
+use failure::Fail;
 use http;
-use http::{Client, Response};
+use http::{Client, Response, Result};
+use serde::de::Deserialize;
+use serde::Serialize;
+use serde_json;
+use std::fmt;
 use std::rc::Rc;
 
 static API_URL: &'static str = "https://api.anyshortcut.com";
@@ -11,7 +16,7 @@ thread_local! {
 ///
 /// The Shortcut struct.
 ///
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Shortcut {
     pub key: String,
     pub url: String,
@@ -20,6 +25,58 @@ pub struct Shortcut {
     pub favicon: String,
     pub domain: String,
     pub open_times: i32,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct ApiResponse {
+    pub code: u32,
+    pub data: serde_json::Value,
+    pub message: String,
+}
+
+#[derive(Debug, Fail)]
+pub struct ApiError {
+    pub code: u32,
+    pub message: String,
+}
+
+#[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
+pub enum ApiErrorKind {
+    #[fail(display = "Invalid access token.")]
+    InvalidToken,
+    #[fail(display = "Unknown error.")]
+    UnknownError,
+
+}
+
+impl fmt::Display for ApiResponse {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{{");
+        write!(f, "\n  code: {},", self.code);
+        write!(f, "\n  data: {},", self.data);
+        write!(f, "\n  message: {}", self.message);
+        write!(f, "\n}}");
+        Ok(())
+    }
+}
+
+impl fmt::Display for ApiError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{{");
+        write!(f, "\n  code: {},", self.code);
+        write!(f, "\n  message: {}", self.message);
+        write!(f, "\n}}");
+        Ok(())
+    }
+}
+
+impl From<ApiResponse> for ApiError {
+    fn from(response: ApiResponse) -> ApiError {
+        ApiError {
+            code: response.code,
+            message: response.message,
+        }
+    }
 }
 
 pub struct Api {
@@ -40,8 +97,25 @@ impl Api {
         API.with(|api| api.clone())
     }
 
-    pub fn login_with_access_token(&self, access_token: &str) -> http::Result<Response> {
-        self.client.get(&format!("/user/login?access_token={}", access_token))
+    pub fn login_with_access_token(&self, access_token: &str) -> Result<serde_json::Value> {
+        let json = json!({ "name": "a" });
+        let response = self.client.get(&format!("/user/login?access_token={}", access_token))?;
+        self.handle_http_response(response)
+    }
+
+    /// Handle http response internally to return correct api error according to api response code.
+    fn handle_http_response(&self, response: Response) -> Result<serde_json::Value> {
+        let api_response = response.deserialize::<ApiResponse>()?;
+
+        match api_response.code {
+            200 => Ok(api_response.data),
+            1002 => Err(ApiError::from(api_response)
+                .context(ApiErrorKind::InvalidToken)
+                .into()),
+            _ => Err(ApiError::from(api_response)
+                .context(ApiErrorKind::UnknownError)
+                .into()),
+        }
     }
 }
 

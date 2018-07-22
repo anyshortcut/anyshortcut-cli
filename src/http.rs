@@ -12,7 +12,7 @@ use std::fmt;
 use std::io::{Read, Write};
 
 /// Shortcut alias for results of this module.
-pub type Result<T> = std::result::Result<T, self::Error>;
+pub type Result<T> = std::result::Result<T, failure::Error>;
 
 #[derive(PartialEq, Debug)]
 pub enum Method {
@@ -221,8 +221,6 @@ impl Response {
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
 pub enum ErrorKind {
-    #[fail(display = "Invalid access token.")]
-    InvalidToken,
     #[fail(display = "Request failed")]
     RequestFailed,
     #[fail(display = "Could not serialize value as JSON")]
