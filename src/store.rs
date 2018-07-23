@@ -1,6 +1,7 @@
 use constants;
 use failure;
 use failure::Error;
+use serde::de::DeserializeOwned;
 use serde::Serialize;
 use serde_json;
 use std::env;
@@ -31,12 +32,41 @@ impl Storage {
         fs::create_dir_all(path.to_str().unwrap())?;
         path.push(&self.file_name);
 
-        let mut file = File::create(path)?;
-        let mut content_bytes: Vec<u8> = vec![];
-
-        serde_json::to_writer(&mut content_bytes, &content)?;
-        file.write_all(&content_bytes)?;
-
+        let file = File::create(path)?;
+        serde_json::to_writer(file, &content)?;
         Ok(())
+    }
+
+    pub fn parse<T: DeserializeOwned>(&self) -> Result<T, Error> {
+        let mut path = env::home_dir()
+            .ok_or_else(|| failure::err_msg("Could not find home dir"))?;
+        path.push(constants::DIRECTORY_NAME);
+        // Create the directory if not exist before write date to file.
+        fs::create_dir_all(path.to_str().unwrap())?;
+        path.push(&self.file_name);
+
+        let file = File::open(path)?;
+        Ok(serde_json::from_reader(file)?)
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use models::*;
+
+    #[test]
+    fn storage_parse_works() {
+        let r = Storage::meta_storage().parse::<Meta>();
+        assert!(r.is_ok());
+        println!("meta {:?}", r.unwrap());
+    }
+
+    #[test]
+    fn storage_persist_works() {
+        let meta = Meta { token: "abcdefg".to_string() };
+        let r = Storage::meta_storage().persist::<Meta>(meta);
+        assert!(r.is_ok());
     }
 }
