@@ -15,7 +15,7 @@ use std::path::PathBuf;
 /// to persist() and parse() target file.
 pub trait Storage: Serialize + DeserializeOwned {
     /// Get storage file name.
-    fn get_file_name(&self) -> String;
+    fn get_file_name() -> String;
 
     fn persist(&self) -> Result<(), Error> {
         let mut path = env::home_dir()
@@ -23,20 +23,20 @@ pub trait Storage: Serialize + DeserializeOwned {
         path.push(constants::DIRECTORY_NAME);
         // Create the directory if not exist before write date to file.
         fs::create_dir_all(path.to_str().unwrap())?;
-        path.push(&self.get_file_name());
+        path.push(Self::get_file_name());
 
         let file = File::create(path)?;
         serde_json::to_writer(file, &self)?;
         Ok(())
     }
 
-    fn parse(&self) -> Result<Self, Error> {
+    fn parse() -> Result<Self, Error> {
         let mut path = env::home_dir()
             .ok_or_else(|| failure::err_msg("Could not find home dir"))?;
         path.push(constants::DIRECTORY_NAME);
         // Create the directory if not exist before write date to file.
         fs::create_dir_all(path.to_str().unwrap())?;
-        path.push(&self.get_file_name());
+        path.push(Self::get_file_name());
 
         let file = File::open(path)?;
         Ok(serde_json::from_reader(file)?)

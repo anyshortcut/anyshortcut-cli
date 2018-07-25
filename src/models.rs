@@ -24,7 +24,7 @@ pub struct Shortcut {
 }
 
 impl Storage for Meta {
-    fn get_file_name(&self) -> String {
+    fn get_file_name() -> String {
         return constants::META_FILE_NAME.to_string();
     }
 }
