@@ -11,6 +11,8 @@ extern crate serde;
 extern crate serde_derive;
 #[macro_use]
 extern crate serde_json;
+#[macro_use]
+extern crate lazy_static;
 
 use clap::{App, AppSettings, Arg, SubCommand};
 use std::process;

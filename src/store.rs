@@ -11,6 +11,11 @@ use std::io::{Read, Write};
 use std::path::PathBuf;
 
 
+lazy_static! {
+    pub static ref META_STORAGE: Storage = Storage::new(constants::META_FILE_NAME);
+}
+
+
 pub struct Storage {
     file_name: String,
 }
@@ -18,10 +23,6 @@ pub struct Storage {
 impl Storage {
     pub fn new(file_name: &str) -> Storage {
         Storage { file_name: file_name.to_string() }
-    }
-
-    pub fn meta_storage() -> Storage {
-        Storage::new(constants::META_FILE_NAME)
     }
 
     pub fn persist<T: Serialize>(&self, content: T) -> Result<(), Error> {
@@ -58,7 +59,7 @@ mod tests {
 
     #[test]
     fn storage_parse_works() {
-        let r = Storage::meta_storage().parse::<Meta>();
+        let r = META_STORAGE.parse::<Meta>();
         assert!(r.is_ok());
         println!("meta {:?}", r.unwrap());
     }
@@ -66,7 +67,7 @@ mod tests {
     #[test]
     fn storage_persist_works() {
         let meta = Meta { token: "abcdefg".to_string() };
-        let r = Storage::meta_storage().persist::<Meta>(meta);
+        let r = META_STORAGE.persist::<Meta>(meta);
         assert!(r.is_ok());
     }
 }
