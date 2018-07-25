@@ -1,4 +1,6 @@
 use serde_json;
+use store::Storage;
+use constants;
 
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -19,4 +21,10 @@ pub struct Shortcut {
     pub favicon: String,
     pub domain: String,
     pub open_times: i32,
+}
+
+impl Storage for Meta {
+    fn get_file_name(&self) -> String {
+        return constants::META_FILE_NAME.to_string();
+    }
 }

@@ -1,7 +1,9 @@
 use api::Api;
 use clap::ArgMatches;
 use failure::Error;
+use models::Meta;
 use open;
+use store::Storage;
 use utils::ui;
 
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
@@ -25,7 +27,8 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
         match Api::get_current().login_with_access_token(&access_token) {
             Ok(response) => {
                 println!("Valid access token.");
-                println!("{:?}", response);
+                Meta { token: access_token }.persist()
+                    .unwrap_or_else(|error| println!("{}", error));
                 break;
             }
             Err(error) => {

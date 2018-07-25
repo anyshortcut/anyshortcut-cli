@@ -11,63 +11,34 @@ use std::io::{Read, Write};
 use std::path::PathBuf;
 
 
-lazy_static! {
-    pub static ref META_STORAGE: Storage = Storage::new(constants::META_FILE_NAME);
-}
+/// **Storage** trait which required supertraits (Serialize, DeserializeOwned)
+/// to persist() and parse() target file.
+pub trait Storage: Serialize + DeserializeOwned {
+    /// Get storage file name.
+    fn get_file_name(&self) -> String;
 
-
-pub struct Storage {
-    file_name: String,
-}
-
-impl Storage {
-    pub fn new(file_name: &str) -> Storage {
-        Storage { file_name: file_name.to_string() }
-    }
-
-    pub fn persist<T: Serialize>(&self, content: T) -> Result<(), Error> {
+    fn persist(&self) -> Result<(), Error> {
         let mut path = env::home_dir()
             .ok_or_else(|| failure::err_msg("Could not find home dir"))?;
         path.push(constants::DIRECTORY_NAME);
         // Create the directory if not exist before write date to file.
         fs::create_dir_all(path.to_str().unwrap())?;
-        path.push(&self.file_name);
+        path.push(&self.get_file_name());
 
         let file = File::create(path)?;
-        serde_json::to_writer(file, &content)?;
+        serde_json::to_writer(file, &self)?;
         Ok(())
     }
 
-    pub fn parse<T: DeserializeOwned>(&self) -> Result<T, Error> {
+    fn parse(&self) -> Result<Self, Error> {
         let mut path = env::home_dir()
             .ok_or_else(|| failure::err_msg("Could not find home dir"))?;
         path.push(constants::DIRECTORY_NAME);
         // Create the directory if not exist before write date to file.
         fs::create_dir_all(path.to_str().unwrap())?;
-        path.push(&self.file_name);
+        path.push(&self.get_file_name());
 
         let file = File::open(path)?;
         Ok(serde_json::from_reader(file)?)
-    }
-}
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use models::*;
-
-    #[test]
-    fn storage_parse_works() {
-        let r = META_STORAGE.parse::<Meta>();
-        assert!(r.is_ok());
-        println!("meta {:?}", r.unwrap());
-    }
-
-    #[test]
-    fn storage_persist_works() {
-        let meta = Meta { token: "abcdefg".to_string() };
-        let r = META_STORAGE.persist::<Meta>(meta);
-        assert!(r.is_ok());
     }
 }
