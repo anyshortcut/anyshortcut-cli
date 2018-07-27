@@ -1,9 +1,10 @@
+use constants;
 use failure::Fail;
 use http::{Client, Response, Result};
+use models::*;
 use serde_json;
 use std::fmt;
 use std::rc::Rc;
-use constants;
 
 thread_local! {
     static API: Rc<Api> = Rc::new(Api::new());
@@ -24,6 +25,8 @@ pub struct ApiError {
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
 pub enum ApiErrorKind {
+    #[fail(display = "Access token required.")]
+    AccessTokenRequired,
     #[fail(display = "Invalid access token.")]
     InvalidToken,
     #[fail(display = "Unknown error.")]
@@ -84,12 +87,21 @@ impl Api {
         self.handle_http_response(response)
     }
 
+    pub fn get_primary_shortcuts(&self) -> Result<serde_json::Value> {
+        let access_token = Meta::get_token();
+        let response = self.client.get(&format!("/shortcuts/all?access_token={}", access_token))?;
+        self.handle_http_response(response)
+    }
+
     /// Handle http response internally to return correct api error according to api response code.
     fn handle_http_response(&self, response: Response) -> Result<serde_json::Value> {
         let api_response = response.deserialize::<ApiResponse>()?;
 
         match api_response.code {
             200 => Ok(api_response.data),
+            1000 => Err(ApiError::from(api_response)
+                .context(ApiErrorKind::AccessTokenRequired)
+                .into()),
             1002 => Err(ApiError::from(api_response)
                 .context(ApiErrorKind::InvalidToken)
                 .into()),

@@ -8,7 +8,6 @@ pub struct Meta {
     pub token: String,
 }
 
-
 ///
 /// The Shortcut struct.
 ///
@@ -21,6 +20,15 @@ pub struct Shortcut {
     pub favicon: String,
     pub domain: String,
     pub open_times: i32,
+}
+
+impl Meta {
+    pub fn get_token() -> String {
+        match Self::parse() {
+            Ok(meta) => meta.token,
+            Err(_) => String::from(""),
+        }
+    }
 }
 
 impl Storage for Meta {
