@@ -34,7 +34,10 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
                 println!("Syncing your shortcut data...");
                 match api.get_all_shortcuts() {
                     Ok(response) => {
-                        println!("{:?}", response["primary"]);
+                        response.primary.persist().unwrap_or_else(|error| println!("{}", error));
+                        response.secondary.persist().unwrap_or_else(|error| println!("{}", error));
+
+                        println!("Shortcuts synced success!")
                     }
                     Err(error) => println!("{}", error)
                 }

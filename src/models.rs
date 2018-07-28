@@ -29,11 +29,16 @@ pub type ShortcutDomain = String;
 /// A aliased type for { "KEY": { SHORTCUT} } map.
 pub type ShortcutMap = HashMap<ShortcutKey, Shortcut>;
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct PrimaryShortcutVec(Vec<ShortcutMap>);
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct SecondaryShortcutMap(HashMap<ShortcutDomain, ShortcutMap>);
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ShortcutData {
-    pub primary: Vec<ShortcutMap>,
-    pub secondary: HashMap<ShortcutDomain, ShortcutMap>,
+    pub primary: PrimaryShortcutVec,
+    pub secondary: SecondaryShortcutMap,
 }
 
 impl Meta {
@@ -47,6 +52,18 @@ impl Meta {
 
 impl Storage for Meta {
     fn get_file_name() -> String {
-        return constants::META_FILE_NAME.to_string();
+        constants::META_FILE_NAME.to_string()
+    }
+}
+
+impl Storage for PrimaryShortcutVec {
+    fn get_file_name() -> String {
+        constants::PRIMARY_FILE_NAME.to_string()
+    }
+}
+
+impl Storage for SecondaryShortcutMap {
+    fn get_file_name() -> String {
+        constants::SECONDARY_FILE_NAME.to_string()
     }
 }
