@@ -2,6 +2,7 @@ use constants;
 use failure::Fail;
 use http::{Client, Response, Result};
 use models::*;
+use serde::de::{Deserialize, DeserializeOwned, Deserializer};
 use serde_json;
 use std::fmt;
 use std::rc::Rc;
@@ -11,9 +12,9 @@ thread_local! {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct ApiResponse {
+pub struct ApiResponse<T> {
     pub code: u32,
-    pub data: serde_json::Value,
+    pub data: T,
     pub message: String,
 }
 
@@ -34,7 +35,7 @@ pub enum ApiErrorKind {
 
 }
 
-impl fmt::Display for ApiResponse {
+impl<T: fmt::Display> fmt::Display for ApiResponse<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{{")?;
         write!(f, "\n  code: {},", self.code)?;
@@ -55,8 +56,8 @@ impl fmt::Display for ApiError {
     }
 }
 
-impl From<ApiResponse> for ApiError {
-    fn from(response: ApiResponse) -> ApiError {
+impl<T> From<ApiResponse<T>> for ApiError {
+    fn from(response: ApiResponse<T>) -> ApiError {
         ApiError {
             code: response.code,
             message: response.message,
@@ -87,15 +88,15 @@ impl Api {
         self.handle_http_response(response)
     }
 
-    pub fn get_all_shortcuts(&self) -> Result<serde_json::Value> {
+    pub fn get_all_shortcuts(&self) -> Result<ShortcutData> {
         let access_token = Meta::get_token();
         let response = self.client.get(&format!("/shortcuts/all?access_token={}", access_token))?;
-        self.handle_http_response(response)
+        self.handle_http_response::<ShortcutData>(response)
     }
 
     /// Handle http response internally to return correct api error according to api response code.
-    fn handle_http_response(&self, response: Response) -> Result<serde_json::Value> {
-        let api_response = response.deserialize::<ApiResponse>()?;
+    fn handle_http_response<T: DeserializeOwned>(&self, response: Response) -> Result<T> {
+        let api_response = response.deserialize::<ApiResponse<T>>()?;
 
         match api_response.code {
             200 => Ok(api_response.data),

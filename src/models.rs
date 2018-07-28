@@ -1,7 +1,7 @@
-use serde_json;
-use store::Storage;
 use constants;
-
+use serde_json;
+use std::collections::HashMap;
+use store::Storage;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Meta {
@@ -13,13 +13,27 @@ pub struct Meta {
 ///
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Shortcut {
-    pub key: String,
+    pub key: ShortcutKey,
     pub url: String,
     pub title: String,
-    pub comment: String,
-    pub favicon: String,
-    pub domain: String,
+    pub comment: Option<String>,
+    pub favicon: Option<String>,
+    pub domain: ShortcutDomain,
     pub open_times: i32,
+}
+
+/// A aliased type for shortcut key.
+pub type ShortcutKey = String;
+/// A aliased type for shortcut domain name.
+pub type ShortcutDomain = String;
+/// A aliased type for { "KEY": { SHORTCUT} } map.
+pub type ShortcutMap = HashMap<ShortcutKey, Shortcut>;
+
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ShortcutData {
+    pub primary: Vec<ShortcutMap>,
+    pub secondary: HashMap<ShortcutDomain, ShortcutMap>,
 }
 
 impl Meta {
