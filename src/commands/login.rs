@@ -24,15 +24,24 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     loop {
         access_token = ui::prompt("Enter your token:")?;
 
-        match Api::get_current().login_with_access_token(&access_token) {
-            Ok(response) => {
+        let api = Api::get_current();
+        match api.login_with_access_token(&access_token) {
+            Ok(_) => {
                 println!("Valid access token.");
                 Meta { token: access_token }.persist()
                     .unwrap_or_else(|error| println!("{}", error));
+
+                println!("Syncing your shortcut data...");
+                match api.get_all_shortcuts() {
+                    Ok(response) => {
+                        println!("{:?}", response["primary"]);
+                    }
+                    Err(error) => println!("{}", error)
+                }
                 break;
             }
             Err(error) => {
-                println!("Invalid access token: {}", error);
+                println!("{}", error);
             }
         }
     }

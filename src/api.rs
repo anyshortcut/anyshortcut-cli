@@ -87,7 +87,7 @@ impl Api {
         self.handle_http_response(response)
     }
 
-    pub fn get_primary_shortcuts(&self) -> Result<serde_json::Value> {
+    pub fn get_all_shortcuts(&self) -> Result<serde_json::Value> {
         let access_token = Meta::get_token();
         let response = self.client.get(&format!("/shortcuts/all?access_token={}", access_token))?;
         self.handle_http_response(response)
@@ -102,7 +102,7 @@ impl Api {
             1000 => Err(ApiError::from(api_response)
                 .context(ApiErrorKind::AccessTokenRequired)
                 .into()),
-            1002 => Err(ApiError::from(api_response)
+            1001 | 1002 => Err(ApiError::from(api_response)
                 .context(ApiErrorKind::InvalidToken)
                 .into()),
             _ => Err(ApiError::from(api_response)

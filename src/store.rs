@@ -26,7 +26,7 @@ pub trait Storage: Serialize + DeserializeOwned {
         path.push(Self::get_file_name());
 
         let file = File::create(path)?;
-        serde_json::to_writer(file, &self)?;
+        serde_json::to_writer_pretty(file, &self)?;
         Ok(())
     }
 
