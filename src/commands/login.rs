@@ -37,7 +37,9 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
                         response.primary.persist().unwrap_or_else(|error| println!("{}", error));
                         response.secondary.persist().unwrap_or_else(|error| println!("{}", error));
 
-                        println!("Shortcuts synced success!")
+                        println!("\nShortcuts synced success!");
+                        println!("Primary shortcut number: {}, secondary shortcut number: {}",
+                                 response.primary.len(), response.secondary.len())
                     }
                     Err(error) => println!("{}", error)
                 }

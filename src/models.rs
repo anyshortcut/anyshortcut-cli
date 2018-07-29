@@ -1,6 +1,7 @@
 use constants;
 use serde_json;
 use std::collections::HashMap;
+use std::ops::Deref;
 use store::Storage;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -47,6 +48,22 @@ impl Meta {
             Ok(meta) => meta.token,
             Err(_) => String::from(""),
         }
+    }
+}
+
+impl Deref for PrimaryShortcutVec {
+    type Target = Vec<ShortcutMap>;
+
+    fn deref(&self) -> &Vec<ShortcutMap> {
+        &self.0
+    }
+}
+
+impl Deref for SecondaryShortcutMap {
+    type Target = HashMap<ShortcutDomain, ShortcutMap>;
+
+    fn deref(&self) -> &HashMap<ShortcutDomain, ShortcutMap> {
+        &self.0
     }
 }
 
