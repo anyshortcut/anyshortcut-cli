@@ -41,4 +41,17 @@ pub trait Storage: Serialize + DeserializeOwned {
         let file = File::open(path)?;
         Ok(serde_json::from_reader(file)?)
     }
+
+    fn clear() -> Result<(), Error> {
+        if let Some(mut path) = env::home_dir() {
+            path.push(constants::DIRECTORY_NAME);
+            path.push(Self::get_file_name());
+
+            if path.exists() {
+                fs::remove_file(path).unwrap();
+            }
+        }
+
+        Ok(())
+    }
 }
