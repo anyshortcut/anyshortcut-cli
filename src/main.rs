@@ -98,7 +98,8 @@ fn main() {
 
     match cli::handle_matches(&matches) {
         Ok(()) => process::exit(0),
-        Err(err) => {
+        Err(error) => {
+            println!("Error: {}", error);
             process::exit(1);
         }
     };

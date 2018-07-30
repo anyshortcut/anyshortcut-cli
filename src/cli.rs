@@ -1,6 +1,7 @@
 use clap::ArgMatches;
 use commands::{list, login, logout, sync};
 use failure::Error;
+use models::ShortcutManager;
 
 pub fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
     match matches.subcommand() {
@@ -17,15 +18,17 @@ pub fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
             list::execute(&list_matches)?
         }
         _ => {
-            if matches.is_present("primary_key") {
-                if matches.is_present("secondary_key") {
-                    println!(
-                        "secondary{:?} {:?}",
-                        matches.value_of("primary_key"),
-                        matches.value_of("secondary_key")
-                    );
-                } else {
-                    println!("primary:{:?}", matches.value_of("primary_key"));
+            match (matches.value_of("primary_key"), matches.value_of("secondary_key")) {
+                (Some(primary_key), Some(secondary_key)) => {
+                    println!("{} {}", primary_key, secondary_key);
+                    ShortcutManager::open_secondary(primary_key, secondary_key);
+                }
+                (Some(primary_key), None) => {
+                    println!("{}", primary_key);
+                    ShortcutManager::open_primary(primary_key);
+                }
+                (_, _) => {
+                    // Impossible case, ignore...
                 }
             }
         }
