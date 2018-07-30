@@ -5,14 +5,14 @@ extern crate curl;
 extern crate failure;
 #[macro_use]
 extern crate failure_derive;
+#[macro_use]
+extern crate lazy_static;
 extern crate open;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
 extern crate serde_json;
-#[macro_use]
-extern crate lazy_static;
 
 use clap::{App, AppSettings, Arg, SubCommand};
 use std::process;
@@ -45,11 +45,13 @@ fn main() {
             Arg::with_name("primary_key")
                 .value_name("PRIMARY_KEY | COMPOUND_KEY")
                 .help("Using primary shortcut key (A~Z|0~9) or compound shortcut key (AA~ZZ) to open the url.")
-                .index(1),
+                .index(1)
+                .validator(cli::validate_primary_key),
             Arg::with_name("secondary_key")
                 .value_name("SECONDARY_KEY")
                 .help("Use secondary shortcut key (A~Z|0~9) to open the url.")
-                .index(2),
+                .index(2)
+                .validator(cli::validate_secondary_key),
         ])
         .subcommand(
             SubCommand::with_name("login")

@@ -1,7 +1,6 @@
 use clap::ArgMatches;
+use commands::{list, login, logout, sync};
 use failure::Error;
-
-use commands::{ login, logout, sync, list };
 
 pub fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
     match matches.subcommand() {
@@ -33,4 +32,27 @@ pub fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
     };
 
     Ok(())
+}
+
+/// Validate primary key format.
+/// Including one-letter primary key and two-letters compound key.
+pub fn validate_primary_key(key: String) -> Result<(), String> {
+    if key.chars().all(|c| c.is_ascii_alphanumeric()) {
+        if key.len() == 0 || key.len() > 2 {
+            return Err(String::from("Invalid key length"));
+        }
+
+        Ok(())
+    } else {
+        Err(String::from("Invalid primary key"))
+    }
+}
+
+/// Validate secondary key format.
+pub fn validate_secondary_key(key: String) -> Result<(), String> {
+    if key.len() == 1 && key.chars().all(|c| c.is_ascii_alphanumeric()) {
+        Ok(())
+    } else {
+        Err(String::from("Invalid secondary key"))
+    }
 }

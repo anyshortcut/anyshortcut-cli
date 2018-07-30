@@ -1,5 +1,4 @@
 use api::Api;
-use failure::Error;
 use store::Storage;
 
 pub mod login;

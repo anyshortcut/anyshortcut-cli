@@ -7,8 +7,6 @@ use serde_json;
 use std::env;
 use std::fs;
 use std::fs::File;
-use std::io::{Read, Write};
-use std::path::PathBuf;
 
 
 /// **Storage** trait which required supertraits (Serialize, DeserializeOwned)
