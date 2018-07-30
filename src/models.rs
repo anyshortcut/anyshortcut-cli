@@ -18,7 +18,6 @@ pub struct Shortcut {
     pub url: String,
     pub title: String,
     pub comment: Option<String>,
-    pub favicon: Option<String>,
     pub domain: ShortcutDomain,
     pub open_times: i32,
 }
@@ -27,14 +26,12 @@ pub struct Shortcut {
 pub type ShortcutKey = String;
 /// A aliased type for shortcut domain name.
 pub type ShortcutDomain = String;
-/// A aliased type for { "KEY": { SHORTCUT} } map.
-pub type ShortcutMap = HashMap<ShortcutKey, Shortcut>;
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct PrimaryShortcutVec(Vec<ShortcutMap>);
+pub struct PrimaryShortcutVec(Vec<Shortcut>);
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct SecondaryShortcutMap(HashMap<ShortcutDomain, ShortcutMap>);
+pub struct SecondaryShortcutMap(HashMap<ShortcutDomain, Vec<Shortcut>>);
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ShortcutData {
@@ -52,17 +49,17 @@ impl Meta {
 }
 
 impl Deref for PrimaryShortcutVec {
-    type Target = Vec<ShortcutMap>;
+    type Target = Vec<Shortcut>;
 
-    fn deref(&self) -> &Vec<ShortcutMap> {
+    fn deref(&self) -> &Vec<Shortcut> {
         &self.0
     }
 }
 
 impl Deref for SecondaryShortcutMap {
-    type Target = HashMap<ShortcutDomain, ShortcutMap>;
+    type Target = HashMap<ShortcutDomain, Vec<Shortcut>>;
 
-    fn deref(&self) -> &HashMap<ShortcutDomain, ShortcutMap> {
+    fn deref(&self) -> &HashMap<ShortcutDomain, Vec<Shortcut>> {
         &self.0
     }
 }

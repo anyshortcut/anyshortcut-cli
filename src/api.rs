@@ -90,7 +90,8 @@ impl Api {
 
     pub fn get_all_shortcuts(&self) -> Result<ShortcutData> {
         let access_token = Meta::get_token();
-        let response = self.client.get(&format!("/shortcuts/all?access_token={}", access_token))?;
+        let response = self.client.get(
+            &format!("/shortcuts/all?nested=false&access_token={}", access_token))?;
         self.handle_http_response::<ShortcutData>(response)
     }
 
