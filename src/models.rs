@@ -23,6 +23,17 @@ pub struct Shortcut {
     pub open_times: i32,
 }
 
+impl Shortcut {
+    pub fn pretty_print(&self) {
+        println!("------------------------------");
+        println!("{}  {}", self.key.to_uppercase(), self.title);
+        println!("Comment: {}", self.comment.as_ref().unwrap());
+        println!("Open times: {}", self.open_times);
+        println!("Domain: {}", self.domain);
+        println!("Url: {}", self.url);
+    }
+}
+
 /// A aliased type for shortcut key.
 pub type ShortcutKey = String;
 /// A aliased type for shortcut domain name.
@@ -43,6 +54,22 @@ pub struct ShortcutData {
 pub struct ShortcutManager {}
 
 impl ShortcutManager {
+    pub fn get_primary_shortcuts() -> Option<Vec<Shortcut>> {
+        PrimaryShortcutVec::parse().ok().and_then(|shortcuts| {
+            Some(shortcuts.iter().cloned()
+                .filter(|shortcut| shortcut.key.len() == 1)
+                .collect())
+        })
+    }
+
+    pub fn get_compound_shortcuts() -> Option<Vec<Shortcut>> {
+        PrimaryShortcutVec::parse().ok().and_then(|shortcuts| {
+            Some(shortcuts.iter().cloned()
+                .filter(|shortcut| shortcut.key.len() == 2)
+                .collect())
+        })
+    }
+
     pub fn get_primary_by_key(key: &str) -> Option<Shortcut> {
         match PrimaryShortcutVec::parse() {
             Ok(shortcuts) => {
