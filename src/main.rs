@@ -5,8 +5,6 @@ extern crate curl;
 extern crate failure;
 #[macro_use]
 extern crate failure_derive;
-#[macro_use]
-extern crate lazy_static;
 extern crate open;
 extern crate serde;
 #[macro_use]
@@ -34,7 +32,6 @@ fn main() {
         .global_setting(AppSettings::DeriveDisplayOrder)
         .global_setting(AppSettings::UnifiedHelpMessage)
         .global_setting(AppSettings::NextLineHelp)
-        .setting(AppSettings::InferSubcommands)
         .setting(AppSettings::ArgsNegateSubcommands)
         .setting(AppSettings::DisableHelpSubcommand)
         .setting(AppSettings::VersionlessSubcommands)
