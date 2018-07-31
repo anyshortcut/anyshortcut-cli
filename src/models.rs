@@ -27,7 +27,7 @@ impl Shortcut {
     pub fn pretty_print(&self) {
         println!("------------------------------");
         println!("{}  {}", self.key.to_uppercase(), self.title);
-        println!("Comment: {}", self.comment.as_ref().unwrap());
+        println!("Comment: {}", self.comment.as_ref().unwrap_or(&String::from("")));
         println!("Open times: {}", self.open_times);
         println!("Domain: {}", self.domain);
         println!("Url: {}", self.url);
@@ -55,19 +55,25 @@ pub struct ShortcutManager {}
 
 impl ShortcutManager {
     pub fn get_primary_shortcuts() -> Option<Vec<Shortcut>> {
-        PrimaryShortcutVec::parse().ok().and_then(|shortcuts| {
-            Some(shortcuts.iter().cloned()
-                .filter(|shortcut| shortcut.key.len() == 1)
-                .collect())
-        })
+        PrimaryShortcutVec::parse().ok()
+            .and_then(|shortcuts| {
+                Some(shortcuts.iter().cloned()
+                    .filter(|shortcut| shortcut.key.len() == 1)
+                    .collect())
+            })
     }
 
     pub fn get_compound_shortcuts() -> Option<Vec<Shortcut>> {
-        PrimaryShortcutVec::parse().ok().and_then(|shortcuts| {
-            Some(shortcuts.iter().cloned()
-                .filter(|shortcut| shortcut.key.len() == 2)
-                .collect())
-        })
+        PrimaryShortcutVec::parse().ok()
+            .and_then(|shortcuts| {
+                Some(shortcuts.iter().cloned()
+                    .filter(|shortcut| shortcut.key.len() == 2)
+                    .collect())
+            })
+    }
+
+    pub fn get_secondary_shortcuts() -> Option<SecondaryShortcutMap> {
+        SecondaryShortcutMap::parse().ok()
     }
 
     pub fn get_primary_by_key(key: &str) -> Option<Shortcut> {
