@@ -1,3 +1,4 @@
+use chrono::{TimeZone, Utc};
 use constants;
 use open;
 use serde_json;
@@ -21,6 +22,8 @@ pub struct Shortcut {
     pub comment: Option<String>,
     pub domain: ShortcutDomain,
     pub open_times: i32,
+    #[serde(rename = "created_time")]
+    pub timestamp: i64,
 }
 
 impl Shortcut {
@@ -31,6 +34,7 @@ impl Shortcut {
         println!("Open times: {}", self.open_times);
         println!("Domain: {}", self.domain);
         println!("Url: {}", self.url);
+        println!("Created time: {}", Utc.timestamp_millis(self.timestamp));
     }
 }
 
