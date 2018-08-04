@@ -1,43 +1,77 @@
-use clap::ArgMatches;
-use commands::{list, login, logout, sync};
-use failure::Error;
-use models::ShortcutManager;
+use clap::{App, AppSettings, Arg, SubCommand};
 
-pub fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
-    match matches.subcommand() {
-        ("login", Some(login_matches)) => {
-            login::execute(&login_matches)?
-        }
-        ("logout", Some(logout_matches)) => {
-            logout::execute(&logout_matches)?
-        }
-        ("sync", Some(sync_matches)) => {
-            sync::execute(&sync_matches)?
-        }
-        ("list", Some(list_matches)) => {
-            list::execute(&list_matches)?
-        }
-        _ => {
-            match (matches.value_of("primary_key"), matches.value_of("secondary_key")) {
-                (Some(primary_key), Some(secondary_key)) => {
-                    ShortcutManager::open_secondary(primary_key, secondary_key);
-                }
-                (Some(primary_key), None) => {
-                    ShortcutManager::open_primary(primary_key);
-                }
-                (_, _) => {
-                    // Impossible case, ignore...
-                }
-            }
-        }
-    };
-
-    Ok(())
+pub fn build_cli() -> App<'static, 'static> {
+    App::new(crate_name!())
+        .version(crate_version!())
+        .about(crate_description!())
+        .global_setting(AppSettings::ColoredHelp)
+        .global_setting(AppSettings::DeriveDisplayOrder)
+        .global_setting(AppSettings::UnifiedHelpMessage)
+        .global_setting(AppSettings::NextLineHelp)
+        .setting(AppSettings::ArgsNegateSubcommands)
+        .setting(AppSettings::DisableHelpSubcommand)
+        .setting(AppSettings::VersionlessSubcommands)
+        .max_term_width(90)
+        .help_message("Print this help message.")
+        .version_message("Show version information.")
+        .args(&[
+            Arg::with_name("primary_key")
+                .value_name("PRIMARY_KEY | COMPOUND_KEY")
+                .help("Using primary shortcut key (A~Z|0~9) or compound shortcut key (AA~ZZ) to open the url.")
+                .index(1)
+                .validator(validate_primary_key),
+            Arg::with_name("secondary_key")
+                .value_name("SECONDARY_KEY")
+                .help("Use secondary shortcut key (A~Z|0~9) to open the url.")
+                .index(2)
+                .validator(validate_secondary_key),
+        ])
+        .subcommand(
+            SubCommand::with_name("login")
+                .about("Login with the token")
+                .arg(
+                    Arg::with_name("token")
+                        .value_name("TOKEN")
+                        .help("[TOKEN] obtained from user dashboard.")
+                        .takes_value(true)
+                        .empty_values(false)),
+        )
+        .subcommand(
+            SubCommand::with_name("sync")
+                .about("Sync all shortcuts after login."),
+        )
+        .subcommand(
+            SubCommand::with_name("list")
+                .about("List shortcuts.")
+                .arg(
+                    Arg::with_name("primary")
+                        .long("primary")
+                        .short("p")
+                        .conflicts_with_all(&["secondary", "compound"])
+                        .help("List all primary shortcuts."),
+                )
+                .arg(
+                    Arg::with_name("secondary")
+                        .long("secondary")
+                        .short("s")
+                        .help("List all secondary shortcuts."),
+                )
+                .arg(
+                    Arg::with_name("compound")
+                        .long("compound")
+                        .short("c")
+                        .help("List all compound shortcuts."),
+                ),
+        )
+        .subcommand(
+            SubCommand::with_name("logout")
+                .about("Logout and clean local data."),
+        )
 }
 
 /// Validate primary key format.
 /// Including one-letter primary key and two-letters compound key.
-pub fn validate_primary_key(key: String) -> Result<(), String> {
+fn validate_primary_key(key: String) -> Result<(), String> {
     if key.chars().all(|c| c.is_ascii_alphanumeric()) {
         if key.len() == 0 || key.len() > 2 {
             return Err(String::from("Invalid key length"));
@@ -50,7 +84,7 @@ pub fn validate_primary_key(key: String) -> Result<(), String> {
 }
 
 /// Validate secondary key format.
-pub fn validate_secondary_key(key: String) -> Result<(), String> {
+fn validate_secondary_key(key: String) -> Result<(), String> {
     if key.len() == 1 && key.chars().all(|c| c.is_ascii_alphanumeric()) {
         Ok(())
     } else {
