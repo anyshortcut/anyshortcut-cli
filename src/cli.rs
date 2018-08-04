@@ -20,11 +20,9 @@ pub fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
         _ => {
             match (matches.value_of("primary_key"), matches.value_of("secondary_key")) {
                 (Some(primary_key), Some(secondary_key)) => {
-                    println!("{} {}", primary_key, secondary_key);
                     ShortcutManager::open_secondary(primary_key, secondary_key);
                 }
                 (Some(primary_key), None) => {
-                    println!("{}", primary_key);
                     ShortcutManager::open_primary(primary_key);
                 }
                 (_, _) => {
