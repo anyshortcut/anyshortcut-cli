@@ -212,10 +212,14 @@ impl Response {
 
     /// Deserialize the response body into the given type
     pub fn deserialize<T: DeserializeOwned>(&self) -> Result<T> {
-        Ok(serde_json::from_reader(match self.body {
-            Some(ref body) => body,
-            None => &b""[..],
-        }).context(ErrorKind::InvalidJson)?)
+        if self.ok() {
+            Ok(serde_json::from_reader(match self.body {
+                Some(ref body) => body,
+                None => &b""[..],
+            }).context(ErrorKind::InvalidJson)?)
+        } else {
+            Err(ErrorKind::RequestFailed.into())
+        }
     }
 }
 

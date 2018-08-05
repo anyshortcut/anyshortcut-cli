@@ -1,4 +1,5 @@
 use api::Api;
+use constants::DIRECTORY_NAME;
 use store::Storage;
 
 pub mod login;
@@ -17,7 +18,9 @@ pub fn sync_all_shortcuts() {
 
             println!("Shortcuts synced success!");
             println!("Primary shortcut number: {}, secondary shortcut number: {}",
-                     response.primary.len(), response.secondary.len())
+                     response.primary.len(), response.secondary.len());
+            println!();
+            println!("All your data stored at ~/{} directory.", DIRECTORY_NAME);
         }
         Err(error) => println!("{}", error)
     }

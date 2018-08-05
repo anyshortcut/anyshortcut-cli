@@ -3,7 +3,7 @@ use failure::Error;
 use models::*;
 use store::Storage;
 
-pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
+pub fn execute(_: &ArgMatches) -> Result<(), Error> {
     Meta::clear()?;
     PrimaryShortcutVec::clear()?;
     SecondaryShortcutMap::clear()?;

@@ -67,14 +67,12 @@ impl<T> From<ApiResponse<T>> for ApiError {
 
 pub struct Api {
     client: Client,
-    token: Option<String>,
 }
 
 impl Api {
     pub fn new() -> Api {
         Api {
             client: Client::new(constants::API_URL),
-            token: None,
         }
     }
 
@@ -92,15 +90,17 @@ impl Api {
         let access_token = Meta::get_token();
         let response = self.client.get(
             &format!("/shortcuts/all?nested=false&access_token={}", access_token))?;
-        self.handle_http_response::<ShortcutData>(response)
+        self.handle_http_response(response)
     }
 
     /// Handle http response internally to return correct api error according to api response code.
     fn handle_http_response<T: DeserializeOwned>(&self, response: Response) -> Result<T> {
-        let api_response = response.deserialize::<ApiResponse<T>>()?;
-
+        let api_response = response.deserialize::<ApiResponse<serde_json::Value>>()?;
         match api_response.code {
-            200 => Ok(api_response.data),
+            200 => {
+                let response = response.deserialize::<ApiResponse<T>>()?;
+                Ok(response.data)
+            }
             1000 => Err(ApiError::from(api_response)
                 .context(ApiErrorKind::AccessTokenRequired)
                 .into()),

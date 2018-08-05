@@ -1,7 +1,6 @@
 use chrono::{TimeZone, Utc};
 use constants;
 use open;
-use serde_json;
 use std::collections::HashMap;
 use std::ops::Deref;
 use store::Storage;
