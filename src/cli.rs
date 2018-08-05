@@ -54,6 +54,7 @@ pub fn build_cli() -> App<'static, 'static> {
                     Arg::with_name("secondary")
                         .long("secondary")
                         .short("s")
+                        .conflicts_with_all(&["primary", "compound"])
                         .help("List all secondary shortcuts."),
                 )
                 .arg(
@@ -91,3 +92,37 @@ fn validate_secondary_key(key: String) -> Result<(), String> {
         Err(String::from("Invalid secondary key"))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use clap::ErrorKind;
+    use itertools::Itertools;
+    use super::*;
+
+    #[test]
+    fn test_args_conflict() {
+        for pair in vec!["-p", "-c", "-s"].iter().combinations(2) {
+            let mut args: Vec<&str> = vec![crate_name!(), "list"];
+            args.extend(pair);
+            let res = build_cli().get_matches_from_safe(args);
+
+            assert_eq!(res.unwrap_err().kind, ErrorKind::ArgumentConflict);
+        }
+    }
+
+    #[test]
+    fn test_args_validator() {
+        let args = vec![crate_name!(), "a", "a"];
+        let res = build_cli().get_matches_from_safe(args);
+        assert!(res.is_ok());
+
+        let args = vec![crate_name!(), "aaaa"];
+        let res = build_cli().get_matches_from_safe(args);
+        assert!(res.is_err());
+
+        let args = vec![crate_name!(), "a*"];
+        let res = build_cli().get_matches_from_safe(args);
+        assert!(res.is_err());
+    }
+}
+

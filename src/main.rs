@@ -6,6 +6,8 @@ extern crate curl;
 extern crate failure;
 #[macro_use]
 extern crate failure_derive;
+#[cfg(test)]
+extern crate itertools;
 extern crate open;
 extern crate serde;
 #[macro_use]
