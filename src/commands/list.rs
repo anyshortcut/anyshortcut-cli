@@ -46,6 +46,9 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
         } else {
             println!("No compound shortcut found.");
         }
+    } else {
+        println!("{}", matches.usage());
+        println!("For detail usage, please run with -h or --help.")
     }
 
     Ok(())

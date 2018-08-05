@@ -142,6 +142,10 @@ impl Meta {
             Err(_) => String::from(""),
         }
     }
+
+    pub fn has_token() -> bool {
+        Self::parse().is_ok()
+    }
 }
 
 impl Deref for PrimaryShortcutVec {
