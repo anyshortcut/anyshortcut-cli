@@ -1,12 +1,15 @@
-use curl;
-use failure;
+extern crate curl;
+extern crate failure;
+#[macro_use]
+extern crate failure_derive;
+extern crate serde;
+extern crate serde_json;
+
 // Magic failure::ResultExt which has context method
 // and implements for std::result::Result
 use failure::{Backtrace, Context, Fail, ResultExt};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use serde_json;
-use std;
 use std::cell::{RefCell, RefMut};
 use std::fmt;
 use std::io::{Read, Write};
@@ -37,10 +40,11 @@ impl fmt::Display for Method {
 
 ///
 /// A Http client base on curl.
-/// 
+///
 pub struct Client {
     shared_handle: RefCell<curl::easy::Easy>,
     base_url: String,
+    user_agent: String,
 }
 
 impl Client {
@@ -48,14 +52,19 @@ impl Client {
         Client {
             shared_handle: RefCell::new(curl::easy::Easy::new()),
             base_url: base_url.to_string(),
+            user_agent: "curl-http".to_string(),
         }
+    }
+
+    pub fn set_user_agent(&mut self, user_agent: &str) {
+        self.user_agent = user_agent.to_string();
     }
 
     pub fn request(&self, method: Method, endpoint: &str) -> Result<Request> {
         let url = format!("{}{}", self.base_url, endpoint);
         let mut handle = self.shared_handle.borrow_mut();
         handle.reset();
-        Request::new(handle, method, &url)
+        Request::new(handle, method, &url)?.with_user_agent(&self.user_agent)
     }
 
     pub fn get(&self, endpoint: &str) -> Result<Response> {
@@ -92,9 +101,6 @@ impl<'a> Request<'a> {
         method: Method,
         url: &str,
     ) -> Result<Request<'a>> {
-        let mut headers = curl::easy::List::new();
-        headers.append(&format!("User-Agent: anyshortcut-cli/{}", "0.0.1")).ok();
-
         match method {
             Method::Get => handle.get(true)?,
             Method::Head => {
@@ -109,7 +115,7 @@ impl<'a> Request<'a> {
 
         Ok(Request {
             handle,
-            headers,
+            headers: curl::easy::List::new(),
             url: url.to_string(),
             body: None,
         })
@@ -117,6 +123,11 @@ impl<'a> Request<'a> {
 
     pub fn with_header(mut self, key: &str, value: &str) -> Result<Request<'a>> {
         self.headers.append(&format!("{}: {}", key, value))?;
+        Ok(self)
+    }
+
+    pub fn with_user_agent(mut self, ua: &str) -> Result<Request<'a>> {
+        self.headers.append(&format!("User-Agent: {}", ua))?;
         Ok(self)
     }
 

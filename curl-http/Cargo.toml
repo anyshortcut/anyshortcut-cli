@@ -1,0 +1,11 @@
+[package]
+name = "curl-http"
+version = "0.1.0"
+authors = ["Folyd <lyshuhow@gmail.com>"]
+
+[dependencies]
+failure = "0.1.1"
+failure_derive = "0.1.1"
+curl = "0.4.12"
+serde = "1.0.70"
+serde_json = "1.0.24"

@@ -1,8 +1,8 @@
 use constants;
+use curl_http::{Client, Response, Result};
 use failure::Fail;
-use http::{Client, Response, Result};
 use models::*;
-use serde::de::{Deserialize, DeserializeOwned};
+use serde::de::DeserializeOwned;
 use serde_json;
 use std::fmt;
 use std::rc::Rc;

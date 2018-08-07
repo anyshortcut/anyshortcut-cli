@@ -1,8 +1,7 @@
 extern crate chrono;
 #[macro_use]
 extern crate clap;
-extern crate curl;
-#[macro_use]
+extern crate curl_http;
 extern crate failure;
 #[macro_use]
 extern crate failure_derive;
@@ -12,7 +11,6 @@ extern crate open;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
 extern crate serde_json;
 
 use clap::ArgMatches;
@@ -25,7 +23,6 @@ mod api;
 mod constants;
 mod cli;
 mod commands;
-mod http;
 mod utils;
 mod store;
 mod models;

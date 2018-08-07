@@ -1,0 +1,25 @@
+[package]
+name = "anyshortcut-cli"
+version = "0.1.0"
+authors = ["Folyd <lyshuhow@gmail.com>"]
+description="A blaze fast way to launch your favorite website in Terminal."
+homepage = "https://github.com/anyshortcut/anyshortcut-cli"
+build="build.rs"
+
+[dependencies]
+failure = "0.1.1"
+failure_derive = "0.1.1"
+clap = "2.32.0"
+open = "1.2.1"
+serde = "1.0.70"
+serde_derive = "1.0.70"
+serde_json = "1.0.24"
+chrono = "0.4.5"
+
+curl-http = { path = "../curl-http" }
+
+[dev-dependencies]
+itertools = "0.7.8"
+
+[build-dependencies]
+clap="2.32.0"
