@@ -71,8 +71,10 @@ pub struct Api {
 
 impl Api {
     pub fn new() -> Api {
+        let mut client = Client::new(constants::API_URL);
+        client.set_user_agent(&format!("anyshortcut-cli/{}", crate_version!()));
         Api {
-            client: Client::new(constants::API_URL),
+            client
         }
     }
 
