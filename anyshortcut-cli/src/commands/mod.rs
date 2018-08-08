@@ -1,3 +1,4 @@
+use ansi_term::Color::{Cyan, Green};
 use api::Api;
 use constants::DIRECTORY_NAME;
 use store::Storage;
@@ -16,11 +17,15 @@ pub fn sync_all_shortcuts() {
             response.primary.persist().unwrap_or_else(|error| println!("{}", error));
             response.secondary.persist().unwrap_or_else(|error| println!("{}", error));
 
-            println!("Shortcuts synced success!");
-            println!("Primary shortcut number: {}, secondary shortcut number: {}",
-                     response.primary.len(), response.secondary.len());
             println!();
-            println!("All your data stored at ~/{} directory.", DIRECTORY_NAME);
+            println!("{}", Green.paint("Shortcuts synced success!"));
+            println!("Primary shortcut number: {}",
+                     Cyan.paint(response.primary.len().to_string()));
+            println!("Secondary shortcut number: {}",
+                     Cyan.paint(response.secondary.len().to_string()));
+            println!();
+            println!("All your data stored at {} directory.",
+                     Cyan.paint(format!("~/{}", DIRECTORY_NAME)));
         }
         Err(error) => println!("{}", error)
     }

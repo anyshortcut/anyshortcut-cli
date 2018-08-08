@@ -1,7 +1,10 @@
+use ansi_term::{ANSIString, ANSIStrings, Style};
+use ansi_term::Color::Yellow;
 use chrono::{TimeZone, Utc};
 use constants;
 use open;
 use std::collections::HashMap;
+use std::fmt;
 use std::ops::Deref;
 use store::Storage;
 
@@ -15,6 +18,7 @@ pub struct Meta {
 ///
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Shortcut {
+    pub id: u32,
     pub key: ShortcutKey,
     pub url: String,
     pub title: String,
@@ -27,13 +31,26 @@ pub struct Shortcut {
 
 impl Shortcut {
     pub fn pretty_print(&self) {
-        println!("------------------------------");
-        println!("{}  {}", self.key.to_uppercase(), self.title);
-        println!("Comment: {}", self.comment.as_ref().unwrap_or(&String::from("")));
-        println!("Open times: {}", self.open_times);
-        println!("Domain: {}", self.domain);
-        println!("Url: {}", self.url);
-        println!("Created time: {}", Utc.timestamp_millis(self.timestamp));
+        println!();
+        println!("{}", "-".repeat(60));
+        let key_str: &[ANSIString<'static>] = &[
+            Yellow.paint("["),
+            Yellow.bold().paint(self.key.to_uppercase()),
+            Yellow.paint("]"),
+        ];
+        println!("{}  {}", ANSIStrings(key_str), Style::new().bold().paint(&self.title));
+
+        println!();
+        self.fixed_label_print("Url:", &self.url);
+        self.fixed_label_print("Comment:", self.comment.as_ref().unwrap_or(&String::from("")));
+        self.fixed_label_print("Domain:", &self.domain);
+        self.fixed_label_print("Open times:", &self.open_times);
+        self.fixed_label_print("Created at:", Utc.timestamp_millis(self.timestamp));
+        println!();
+    }
+
+    fn fixed_label_print(&self, label: &str, text: impl fmt::Display) {
+        println!("{:14}{}", label, text);
     }
 }
 

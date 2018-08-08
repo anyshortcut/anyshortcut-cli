@@ -1,3 +1,4 @@
+extern crate ansi_term;
 extern crate chrono;
 #[macro_use]
 extern crate clap;
