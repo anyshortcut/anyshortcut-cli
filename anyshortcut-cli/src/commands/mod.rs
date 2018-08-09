@@ -22,7 +22,10 @@ pub fn sync_all_shortcuts() {
             println!("Primary shortcut number: {}",
                      Cyan.paint(response.primary.len().to_string()));
             println!("Secondary shortcut number: {}",
-                     Cyan.paint(response.secondary.len().to_string()));
+                     Cyan.paint(response.secondary.values()
+                         .fold(0, |acc, shortcuts| acc + shortcuts.len())
+                         .to_string()
+                     ));
             println!();
             println!("All your data stored at {} directory.",
                      Cyan.paint(format!("~/{}", DIRECTORY_NAME)));
