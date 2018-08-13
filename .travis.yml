@@ -30,10 +30,14 @@ before_install:
 - set -e
 - rustup self update
 
-install: true
+install:
+# prevent target re-add error from rustup
+- if [[ $TRAVIS_OS_NAME = linux && $HOST != $TARGET ]]; then rustup target add $TARGET; fi
 
 script:
-- bash ci/script.sh
+# Incorporate TARGET env var to the build and test process
+- cargo build --target $TARGET --verbose
+- cargo test --target $TARGET --verbose
 
 after_script: set +e
 
