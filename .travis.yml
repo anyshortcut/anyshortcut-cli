@@ -5,6 +5,9 @@ sudo: required
 
 env:
   global:
+  # Default target on travis-ci.
+  # Used as conditional check in the install stage
+  - HOST=x86_64-unknown-linux-gnu
   - CRATE_NAME=anyshortcut-cli
 
 matrix:
@@ -12,7 +15,7 @@ matrix:
   # Linux
   - env: TARGET=i686-unknown-linux-gnu
   - env: TARGET=i686-unknown-linux-musl
-  - env: TARGET=x86_64-unknown-linux-gnu SKIP_INSTALL=1
+  - env: TARGET=x86_64-unknown-linux-gnu
   - env: TARGET=x86_64-unknown-linux-musl
 
   # OSX
@@ -26,7 +29,7 @@ before_install:
 
 install:
 # prevent target re-add error from rustup
-- if [ -z "$SKIP_INSTALL" ]; then rustup target add $TARGET; fi
+- if [[ $TRAVIS_OS_NAME = linux && $HOST != $TARGET ]]; then rustup target add $TARGET; fi
 
 script:
 # Incorporate TARGET env var to the build and test process
