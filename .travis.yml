@@ -22,6 +22,17 @@ matrix:
   - env: TARGET=x86_64-apple-darwin
     os: osx
 
+addons:
+  apt:
+    packages:
+    - pkg-config
+    - libssl-dev
+    # needed for i686-unknown-linux-gnu target
+    - gcc-multilib
+    # needed for musl targets
+    - musl-tools
+    # needed to build deb packages
+    - fakeroot
 
 before_install:
 - set -e
