@@ -43,4 +43,34 @@ build: false
 #directly or perform other testing commands. Rust will automatically be placed in the PATH
 # environment variable.
 test_script:
-- cargo test --verbose %cargoflags%
+- cargo test --target %TARGET% --verbose %cargoflags%
+
+before_deploy:
+# Generate artifacts for release
+- cargo build --release
+- mkdir staging
+- copy target\release\fd.exe staging
+- ps: copy target\release\build\*\out\_fd.ps1 staging
+- cd staging
+- 7z a ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip *
+- appveyor PushArtifact ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip
+
+deploy:
+  description: 'Windows release'
+  # All the zipped artifacts will be deployed
+  artifact: /.*\.zip/
+  auth_token:
+    secure: F3W/4UctpxkCH0t+L4aooTzm6ZlMCMAzCpD0KnOgzWZZvWMcOY3MTl8Sa4wcmUlM
+  provider: GitHub
+  # deploy when a new tag is pushed and only on the stable channel
+  on:
+    # channel to use to produce the release artifacts
+    channel: stable
+    appveyor_repo_tag: true
+
+branches:
+  only:
+  - master
+  # IMPORTANT Regex to match tags. Required, or appveyor may not trigger deploys when a new tag
+  # is pushed. This regex matches semantic versions like v1.2.3-rc4+2016.02.22
+  - /^v\d+\.\d+\.\d+.*$/
