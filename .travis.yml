@@ -10,29 +10,31 @@ env:
   - HOST=x86_64-unknown-linux-gnu
   - CRATE_NAME=anyshortcut-cli
 
+cache:
+  directories:
+  - $HOME/.cargo
+  - $TRAVIS_BUILD_DIR/target
+
 matrix:
   include:
   # Linux
-  - env: TARGET=i686-unknown-linux-gnu
-  - env: TARGET=i686-unknown-linux-musl
-  - env: TARGET=x86_64-unknown-linux-gnu
-  - env: TARGET=x86_64-unknown-linux-musl
+  - os: linux
+    env:
+    - TARGET=i686-unknown-linux-musl
+    - DOCKER_IMAGE_TAG=i686-musl
+    script: bash ci/test-in-docker.sh
+
+  - os: linux
+    env:
+    - TARGET=x86_64-unknown-linux-musl
+    - DOCKER_IMAGE_TAG=x86_64-musl
+    script: bash ci/test-in-docker.sh
 
   # OSX
-  - env: TARGET=x86_64-apple-darwin
-    os: osx
-
-addons:
-  apt:
-    packages:
-    - pkg-config
-    - libssl-dev
-    # needed for i686-unknown-linux-gnu target
-    - gcc-multilib
-    # needed for musl targets
-    - musl-tools
-    # needed to build deb packages
-    - fakeroot
+  - os: osx
+    env: TARGET=x86_64-apple-darwin
+    script:
+    - cargo test --target $TARGET --verbose
 
 before_install:
 - set -e
@@ -41,11 +43,6 @@ before_install:
 install:
 # prevent target re-add error from rustup
 - if [[ $TRAVIS_OS_NAME = linux && $HOST != $TARGET ]]; then rustup target add $TARGET; fi
-
-script:
-# Incorporate TARGET env var to the build and test process
-- cargo build --target $TARGET --verbose
-- cargo test --target $TARGET --verbose
 
 after_script: set +e
 
@@ -63,7 +60,6 @@ deploy:
   provider: releases
   skip_cleanup: true
 
-cache: cargo
 before_cache:
 # Travis can't cache files that are not readable by "others"
 - chmod -R a+r $HOME/.cargo
