@@ -13,14 +13,6 @@ environment:
   - CHANNEL: stable
     TARGET: i686-pc-windows-msvc
 
-  ### GNU Toolchains ###
-  # Stable 64-bit GNU
-  - CHANNEL: stable
-    TARGET: x86_64-pc-windows-gnu
-  # Stable 32-bit GNU
-  - CHANNEL: stable
-    TARGET: i686-pc-windows-gnu
-
 ## Install Script ##
 
 # This is the most important part of the Appveyor configuration. This installs the version of Rust
@@ -30,12 +22,6 @@ environment:
 # For simple configurations, instead of using the build matrix, you can simply set the
 # default-toolchain and default-host manually here.
 install:
-- ps: >-
-    If ($Env:TARGET -eq 'x86_64-pc-windows-gnu') {
-      $Env:PATH += ';C:\msys64\mingw64\bin;C:\msys64\usr\bin'
-    } ElseIf ($Env:TARGET -eq 'i686-pc-windows-gnu') {
-      $Env:PATH += ';C:\msys64\mingw32\bin;C:\msys64\usr\bin'
-    }
 - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
 - rustup-init -yv --default-toolchain %CHANNEL% --default-host %TARGET%
 - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
