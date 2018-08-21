@@ -9,11 +9,9 @@ environment:
   # Stable 64-bit MSVC
   - CHANNEL: stable
     TARGET: x86_64-pc-windows-msvc
-    MSYS_BITS: 64
   # Stable 32-bit MSVC
   - CHANNEL: stable
     TARGET: i686-pc-windows-msvc
-    MSYS_BITS: 32
 
   ### GNU Toolchains ###
   # Stable 64-bit GNU
@@ -32,10 +30,15 @@ environment:
 # For simple configurations, instead of using the build matrix, you can simply set the
 # default-toolchain and default-host manually here.
 install:
+- ps: >-
+    If ($Env:TARGET -eq 'x86_64-pc-windows-gnu') {
+      $Env:PATH += ';C:\msys64\mingw64\bin;C:\msys64\usr\bin'
+    } ElseIf ($Env:TARGET -eq 'i686-pc-windows-gnu') {
+      $Env:PATH += ';C:\msys64\mingw32\bin;C:\msys64\usr\bin'
+    }
 - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
 - rustup-init -yv --default-toolchain %CHANNEL% --default-host %TARGET%
 - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
-- if defined MSYS_BITS set PATH=%PATH%;C:\msys64\mingw%MSYS_BITS%\bin;C:\msys64\usr\bin
 - rustc -vV
 - cargo -vV
 
