@@ -1,49 +1,51 @@
-# anyshortcut-cli
-CLI (Commnad Line Interface) version of Anyshortcut write with **Rust**.
+![](./anyshortcut-cli.jpg)
+# Anyshortcut Command Line Interface
 
-## Usages
+[![Travis Build Status](https://travis-ci.com/anyshortcut/anyshortcut-cli.svg?branch=master)](https://travis-ci.com/anyshortcut/anyshortcut-cli)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/rh7no4jdnw9mheu9/branch/master?svg=true)](https://ci.appveyor.com/project/Folyd/anyshortcut-cli/branch/master) 
+[![license-mit](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/anyshortcut/anyshortcut-cli/blob/master/LICENSE-MIT)
+[![license-apache](https://img.shields.io/badge/license-Apache-orange.svg)](https://github.com/anyshortcut/anyshortcut-cli/blob/master/LICENSE-APACHE)
 
-### Open primary shortcut
+A blaze fast way to launch your favorite website in Terminal.
+
+## Features
+
+- **Open primary shortcut**
+
 > `as [a~z|0~9]`
 
-### Open secondary shortcut
+- **Open secondary shortcut**
+
 > `as [a~z|0~9] [a~z|0~9]`
 
-### Open compound shortcut
+- **Open compound shortcut**
+
 > `as [a~z][a~z]`
 
-### Login with token
+- **Login with token**
+
 > `as login [token]`
 
-### Sync shortcuts
+- **Sync shortcuts**
+
 > `as sync`
 
-### List shortcuts
+- **List shortcuts**
+
 > `as list [-p|-s|-c] [-v]`
 
 - `-p` list primary shortcuts
 - `-s` list secondary shortcuts
 - `-c` list compound shortcuts
 
-`-v` to display verbose detail of shortcut list
+- **Logout**
 
-### Logout
 > `as logout`
 
 Any data will be cleaned.
 
-## Stack
-
-### JSON, yaml serilize and deserilize
-> https://github.com/serde-rs/serde
-
-### HTTP client
-
-> https://github.com/alexcrichton/curl-rust
 
 
-### Reference
-```
-https://github.com/getsentry/sentry-cli
-```
+## Installation
 
+To be done
