@@ -44,7 +44,7 @@ before_deploy:
 # Generate artifacts for release
 - cargo build --release
 - mkdir staging
-- copy target\release\as.exe staging
+- copy target\release\anyshortcut-cli.exe staging
 - ps: copy target\release\build\*\out\_as.ps1 staging
 - cd staging
 - 7z a ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip *
