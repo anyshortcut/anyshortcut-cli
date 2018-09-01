@@ -8,7 +8,7 @@ env:
   # Default target on travis-ci.
   # Used as conditional check in the install stage
   - HOST=x86_64-unknown-linux-gnu
-  - CRATE_NAME=anyshortcut-cli
+  - PROJECT_NAME=anyshortcut-cli
 
 cache:
   directories:
@@ -53,20 +53,21 @@ install:
 after_script: set +e
 
 before_deploy:
-- cargo build --target "$TARGET" --release --verbose
+- cargo build --target $TARGET --release --verbose
+- ls -al
 
 deploy:
+  provider: releases
   api_key:
     # Generate secure token with travis encrypt --pro
     secure: "VSjB9datAXSA678W+fF5M2KELZpIucBUQATRuHXTwq5VYxhiy7fvX8lM5fEGZAUVqFQJDo9Isf75GHtMoR0dmjxqIXitdDkD117xo8Ta6uq11q1SCx+OGLh9rlNtVLSPOxL+VdhN5CmoccBzf01Lv2yiWPIzOd/u6OfK0MVAQ3C+Gp4aCdpI5AfoSgYXUnYtNLo9p4ul9eTyrzqDAZbRoYNx71rFUBz2kWmnifb+vBbg6+w+dxs+UAFj5+f29S7DGV0vyIMYocrXhjfkGu2jkS6tVFRZLrGAm2Yknh7A7A0brTdeQaItbmW6ddAR7uD7AlXvR5pND5RwME217GHYklmYg2eP084idfqvNMLdomF8WTt5PB1tVUg4NxasQLki/Qi/cUDeWARFbCsN86YYX78t7UFMkvR5mBdfe7HCUUiPBaelM7YF86jp20Sb6Dc9/RXqbzrXN0EHIhD0/YoIMC5JUyZDiYK5Bg2z9yd1YO/VBLFTng5gt9+M//abDlq00ufnjlEIgOtFBGjWNuG/iKS6A0qdwGI+bcm7S/VnqewfAhLHNDzXtUqSs1NWK2j496sZLCQcVaZnB2fvoUIwx8ah+d8tkoaB5YC15NlBXSt2iG7ijjxk5TPSJaYOwmX93fVQF1HfB/n0kxad10ldgkd1RtGhkLJK8k/nj23CZOM="
   file_glob: true
-  file: "$CRATE_NAME-$TRAVIS_TAG-$TARGET.*"
+  file: $PROJECT_NAME-$TRAVIS_TAG-$TARGET.*
+  skip_cleanup: true
   on:
     # deploy only on stable channel that has TARGET env variable sets
     condition: $TRAVIS_RUST_VERSION = stable && $TARGET != ""
     tags: true
-  provider: releases
-  skip_cleanup: true
 
 before_cache:
 # Travis can't cache files that are not readable by "others"
