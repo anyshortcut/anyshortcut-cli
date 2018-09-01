@@ -12,9 +12,8 @@ env:
 
 cache:
   directories:
-  - $HOME/.cargo
-  - $TRAVIS_BUILD_DIR/target
-
+  - "$HOME/.cargo"
+  - "$TRAVIS_BUILD_DIR/target"
 addons:
   apt:
     packages:
@@ -58,9 +57,10 @@ before_deploy:
 
 deploy:
   api_key:
-    secure: "jS0oZYqAlGzrisNWiJW24JdxuALiNo9VuPRYcAiT5qQ6HH8wne/sFC5zWLq5HZmPVtnBUTXPGV3dfj0jYWADFIKW4Rhgu1nPShVhOEa3wmwptPaxiOZWgoV1yXvONYJmYRiI/Dko0tBGPJ/PDv6MuFPLFPlJXbeS8KDth5Am/8kSbGsoePpIGwhK7gadb2GCkfHTNX3rvzzUt8nYp3G7wNj6YCJL3YIu91OaYAAoWjOZZ/bwwreJKXEkeKfReUYPJfUJXzJXbsPZ0nFv2zljTMynE956JZOS1lBN59BIh8AeNvy4prng0YQSQdM/G9oOBBUQ7HfQhJRcWCUoTjjnP8iao9t2rCibsQ8xORaz5lQfW2n/VKV1DH/grveUG2fwjNirfm6VIRpCtfE1gdWCEMcG8xyUKNXdwiZRqJtoRulBFesrarJWXJjX0xsjDEimYNRinSYdrmPyXYIbqNVsNzUUD8ne7HCEZoYCyTWtl9q587mFr7PlLGUU62/syWiIqw3cttpY7jSbRIwEX7fedqXLQCTpF1q9e/KRD/zCAvRsUQ7Z4SgS0Xlnf/2GFElFhNy/LyCvqGbVoE3Nl0KJavkAUixyhuU3OkqDVzUSsMHRK9eOuW46r58AgA1erDoaaNV9rklnS+dtgNjO59ENq7e0El3+exuDvjqPm9PcXYY="
+    # Generate secure token with travis encrypt --pro
+    secure: "VSjB9datAXSA678W+fF5M2KELZpIucBUQATRuHXTwq5VYxhiy7fvX8lM5fEGZAUVqFQJDo9Isf75GHtMoR0dmjxqIXitdDkD117xo8Ta6uq11q1SCx+OGLh9rlNtVLSPOxL+VdhN5CmoccBzf01Lv2yiWPIzOd/u6OfK0MVAQ3C+Gp4aCdpI5AfoSgYXUnYtNLo9p4ul9eTyrzqDAZbRoYNx71rFUBz2kWmnifb+vBbg6+w+dxs+UAFj5+f29S7DGV0vyIMYocrXhjfkGu2jkS6tVFRZLrGAm2Yknh7A7A0brTdeQaItbmW6ddAR7uD7AlXvR5pND5RwME217GHYklmYg2eP084idfqvNMLdomF8WTt5PB1tVUg4NxasQLki/Qi/cUDeWARFbCsN86YYX78t7UFMkvR5mBdfe7HCUUiPBaelM7YF86jp20Sb6Dc9/RXqbzrXN0EHIhD0/YoIMC5JUyZDiYK5Bg2z9yd1YO/VBLFTng5gt9+M//abDlq00ufnjlEIgOtFBGjWNuG/iKS6A0qdwGI+bcm7S/VnqewfAhLHNDzXtUqSs1NWK2j496sZLCQcVaZnB2fvoUIwx8ah+d8tkoaB5YC15NlBXSt2iG7ijjxk5TPSJaYOwmX93fVQF1HfB/n0kxad10ldgkd1RtGhkLJK8k/nj23CZOM="
   file_glob: true
-  file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  file: "$CRATE_NAME-$TRAVIS_TAG-$TARGET.*"
   on:
     # deploy only on stable channel that has TARGET env variable sets
     condition: $TRAVIS_RUST_VERSION = stable && $TARGET != ""
@@ -74,8 +74,7 @@ before_cache:
 
 branches:
   only:
-  # release tags
-  - /^v\d+\.\d+\.\d+.*$/
+  - "/^v\\d+\\.\\d+\\.\\d+.*$/"
   - master
 
 notifications:
