@@ -53,8 +53,7 @@ install:
 after_script: set +e
 
 before_deploy:
-- cargo build --target $TARGET --release --verbose
-- ls -al
+- bash ci/before_deploy.sh
 
 deploy:
   provider: releases
