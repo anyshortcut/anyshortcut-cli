@@ -11,7 +11,7 @@ pub fn build_cli() -> App<'static, 'static> {
         .setting(AppSettings::ArgsNegateSubcommands)
         .setting(AppSettings::DisableHelpSubcommand)
         .setting(AppSettings::VersionlessSubcommands)
-        .max_term_width(90)
+        .max_term_width(100)
         .help_message("Print this help message.")
         .version_message("Show version information.")
         .args(&[

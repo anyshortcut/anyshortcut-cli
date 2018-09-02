@@ -63,7 +63,8 @@ fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
                     ShortcutManager::open_primary(primary_key);
                 }
                 (_, _) => {
-                    // Impossible case, ignore...
+                    // No args or subcommand provided, print the long help message.
+                    cli::build_cli().print_long_help()?;
                 }
             }
         }
