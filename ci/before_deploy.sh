@@ -20,6 +20,7 @@ pack() {
     mkdir "$tempdir/$package_name"
 
     # copying the main binary
+    ls -al "target/$TARGET/release"
     cp "target/$TARGET/release/$PROJECT_NAME" "$tempdir/$package_name/"
     strip "$tempdir/$package_name/$PROJECT_NAME"
 
@@ -37,7 +38,6 @@ pack() {
 
 
 main() {
-    build
     pack
 }
 

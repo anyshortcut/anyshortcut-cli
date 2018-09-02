@@ -9,7 +9,7 @@ docker run \
         -v `pwd`/target:${BUILD_DIR}/target \
         -v $HOME/.cargo/registry:/root/.cargo/registry \
         -it messense/rust-musl-cross:${DOCKER_IMAGE_TAG} \
-        cargo test --target ${TARGET} --verbose
+        cargo build --release --target ${TARGET} --verbose
 
 # Fix permissions for shared directories
 USER_ID=$(id -u)

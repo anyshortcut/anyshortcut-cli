@@ -1,5 +1,5 @@
 dist: trusty
-language: rust
+language: generic
 services: docker
 sudo: required
 
@@ -12,14 +12,8 @@ env:
 
 cache:
   directories:
-  - "$HOME/.cargo"
-  - "$TRAVIS_BUILD_DIR/target"
-addons:
-  apt:
-    packages:
-    - gcc-multilib
-    # needed for musl targets
-    - musl-tools
+  - $HOME/.cargo
+  - $TRAVIS_BUILD_DIR/target
 
 matrix:
   include:
@@ -28,29 +22,22 @@ matrix:
     env:
     - TARGET=i686-unknown-linux-musl
     - DOCKER_IMAGE_TAG=i686-musl
-    script: bash ci/test-in-docker.sh
+    script: bash ci/build_in_docker.sh
 
   - os: linux
     env:
     - TARGET=x86_64-unknown-linux-musl
     - DOCKER_IMAGE_TAG=x86_64-musl
-    script: bash ci/test-in-docker.sh
+    script: bash ci/build_in_docker.sh
 
   # OSX
   - os: osx
+    language: rust
     env: TARGET=x86_64-apple-darwin
     script:
-    - cargo test --target $TARGET --verbose
+    - cargo build --release --target $TARGET --verbose
 
-before_install:
-- set -e
-- rustup self update
-
-install:
-# prevent target re-add error from rustup
-- if [[ $TRAVIS_OS_NAME = linux && $HOST != $TARGET ]]; then rustup target add $TARGET; fi
-
-after_script: set +e
+before_install: true
 
 before_deploy:
 - bash ci/before_deploy.sh
@@ -64,8 +51,6 @@ deploy:
   file: $PROJECT_NAME-$TRAVIS_TAG-$TARGET.*
   skip_cleanup: true
   on:
-    # deploy only on stable channel that has TARGET env variable sets
-    condition: $TRAVIS_RUST_VERSION = stable && $TARGET != ""
     tags: true
 
 before_cache:
