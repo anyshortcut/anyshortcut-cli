@@ -1,7 +1,6 @@
 use ansi_term::Color::{Cyan, Green};
 use api::Api;
-use constants::DIRECTORY_NAME;
-use store::Storage;
+use store::{self, Storage};
 
 pub mod login;
 pub mod logout;
@@ -27,8 +26,11 @@ pub fn sync_all_shortcuts() {
                          .to_string()
                      ));
             println!();
+
+            // Get the store directory PathBuf object.
+            let dir = store::get_store_directory().unwrap();
             println!("All your data stored at {} directory.",
-                     Cyan.paint(format!("~/{}", DIRECTORY_NAME)));
+                     Cyan.paint(format!("{}", dir.display())));
         }
         Err(error) => println!("{}", error)
     }
