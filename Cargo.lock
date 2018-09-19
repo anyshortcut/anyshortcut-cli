@@ -13,7 +13,7 @@ dependencies = [
  "ansi_term 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.32.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "curl-http 0.1.0",
+ "curl-http 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dirs 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure_derive 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -111,6 +111,7 @@ dependencies = [
 [[package]]
 name = "curl-http"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "curl 0.4.15 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -463,6 +464,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)" = "45912881121cb26fad7c38c17ba7daa18764771836b34fab7d3fbd93ed633878"
 "checksum clap 2.32.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b957d88f4b6a63b9d70d5f454ac8011819c6efa7727858f458ab71c756ce2d3e"
 "checksum curl 0.4.15 (registry+https://github.com/rust-lang/crates.io-index)" = "a2f58080df27bc90d474e87714f32f35ba6d8a7e60ae92d1d991fc8812d23f21"
+"checksum curl-http 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ccfcefb12a24bbf8423f8d284e12acd590ab387dbdfcb16e62d1ee3adf9ac435"
 "checksum curl-sys 0.4.10 (registry+https://github.com/rust-lang/crates.io-index)" = "2edeedbbd9c7cdccb14bfb5dfbcc108901f99d3411eb5bab3758789377c5bec4"
 "checksum dirs 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)" = "f679c09c1cf5428702cc10f6846c56e4e23420d3a88bcc9335b17c630a7b710b"
 "checksum either 1.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "3be565ca5c557d7f59e7cfcf1844f9e3033650c929c6566f511e8005f205c1d0"

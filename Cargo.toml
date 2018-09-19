@@ -1,5 +1,32 @@
-[workspace]
-members=[
-    "anyshortcut-cli",
-    "curl-http",
-]
+[package]
+name = "anyshortcut-cli"
+version = "0.1.0"
+authors = ["Folyd <lyshuhow@gmail.com>"]
+description="A blaze fast way to launch your favorite website in Terminal."
+homepage = "https://github.com/anyshortcut/anyshortcut-cli"
+license-file = "LICENSE-MIT OR LICENSE-APACHE"
+build="build.rs"
+
+[dependencies]
+curl-http = "0.1.0"
+failure = "0.1.2"
+failure_derive = "0.1.2"
+dirs = "1.0.3"
+open = "1.2.2"
+serde = "1.0.71"
+serde_derive = "1.0.79"
+serde_json = "1.0.27"
+chrono = "0.4.6"
+ansi_term = "0.11.0"
+
+[dependencies.clap]
+version = "2.32"
+default-features = false
+features = [ "color", "vec_map" ]
+
+[dev-dependencies]
+itertools = "0.7.8"
+
+[build-dependencies.clap]
+version = "2.32"
+default-features = false
