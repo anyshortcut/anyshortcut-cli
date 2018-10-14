@@ -1,8 +1,7 @@
 ![](./anyshortcut-cli.jpg)
 # Anyshortcut Command Line Interface
 
-[![Travis Build Status](https://travis-ci.com/anyshortcut/anyshortcut-cli.svg?branch=master)](https://travis-ci.com/anyshortcut/anyshortcut-cli)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/rh7no4jdnw9mheu9/branch/master?svg=true)](https://ci.appveyor.com/project/Folyd/anyshortcut-cli/branch/master) 
+[![Travis Build Status](https://travis-ci.com/anyshortcut/anyshortcut-cli.svg?branch=master)](https://travis-ci.com/anyshortcut/anyshortcut-cli) 
 [![license-mit](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/anyshortcut/anyshortcut-cli/blob/master/LICENSE-MIT)
 [![license-apache](https://img.shields.io/badge/license-Apache-orange.svg)](https://github.com/anyshortcut/anyshortcut-cli/blob/master/LICENSE-APACHE)
 
