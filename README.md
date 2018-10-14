@@ -3,7 +3,8 @@
 
 [![Travis Build Status](https://travis-ci.com/anyshortcut/anyshortcut-cli.svg?branch=master)](https://travis-ci.com/anyshortcut/anyshortcut-cli) 
 [![license-mit](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/anyshortcut/anyshortcut-cli/blob/master/LICENSE-MIT)
-[![license-apache](https://img.shields.io/badge/license-Apache-orange.svg)](https://github.com/anyshortcut/anyshortcut-cli/blob/master/LICENSE-APACHE)
+[![license-apache](https://img.shields.io/badge/license-Apache-yellow.svg)](https://github.com/anyshortcut/anyshortcut-cli/blob/master/LICENSE-APACHE)
+[![Version info](https://img.shields.io/crates/v/anyshortcut.svg)](https://crates.io/crates/anyshortcut)
 
 A blaze fast way to launch your favorite website in Terminal.
 
@@ -47,4 +48,16 @@ Any data will be cleaned.
 
 ## Installation
 
-To be done
+#### Cargo
+`cargo install anyshortcut`
+
+Recommend give it an alias name such as **as** by adding following line to your environment:
+
+`alias as='~/.cargo/bin/anyshortcut'`
+
+then source your profile to make it works.
+
+
+#### Homebrew
+
+`brew install anyshortcut`
