@@ -37,6 +37,12 @@ matrix:
     script:
     - cargo build --release --target $TARGET --verbose
 
+  - os: windows
+    language: rust
+    env: TARGET=x86_64-pc-windows-msvc
+    script:
+    - cargo build --release --target $TARGET --verbose
+
 before_install: true
 
 before_deploy:
