@@ -1,10 +1,10 @@
 [package]
 name = "anyshortcut"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Folyd <lyshuhow@gmail.com>"]
 description="A blaze fast way to launch your favorite website in Terminal."
 homepage = "https://github.com/anyshortcut/anyshortcut-cli"
-license-file = "LICENSE-MIT OR LICENSE-APACHE"
+license = "MIT OR Apache-2.0"
 build="build.rs"
 
 [dependencies]
