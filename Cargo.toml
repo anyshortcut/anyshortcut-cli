@@ -1,5 +1,5 @@
 [package]
-name = "anyshortcut-cli"
+name = "anyshortcut"
 version = "0.1.0"
 authors = ["Folyd <lyshuhow@gmail.com>"]
 description="A blaze fast way to launch your favorite website in Terminal."
