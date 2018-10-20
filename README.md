@@ -8,56 +8,134 @@
 
 A blaze fast way to launch your favorite website in Terminal.
 
-## Features
-
-- **Open primary shortcut**
-
-> `as [a~z|0~9]`
-
-- **Open secondary shortcut**
-
-> `as [a~z|0~9] [a~z|0~9]`
-
-- **Open compound shortcut**
-
-> `as [a~z][a~z]`
-
-- **Login with token**
-
-> `as login [token]`
-
-- **Sync shortcuts**
-
-> `as sync`
-
-- **List shortcuts**
-
-> `as list [-p|-s|-c] [-v]`
-
-- `-p` list primary shortcuts
-- `-s` list secondary shortcuts
-- `-c` list compound shortcuts
-
-- **Logout**
-
-> `as logout`
-
-Any data will be cleaned.
-
-
-
 ## Installation
 
 #### Cargo
+
 `cargo install anyshortcut`
-
-Recommend give it an alias name such as **as** by adding following line to your environment:
-
-`alias as='~/.cargo/bin/anyshortcut'`
-
-then source your profile to make it works.
-
 
 #### Homebrew
 
 `brew install anyshortcut`
+
+> Unmerged: https://github.com/Homebrew/homebrew-core/pull/33198
+
+#### Install binary file from Github release
+
+https://github.com/anyshortcut/anyshortcut-cli/releases
+
+**Recommend**
+
+> Give it an alias name such as **as** by adding following line to your 
+> **.bashrc** or **.zshrc** file:
+>
+> ```shell
+> alias as=$(which anyshortcut)
+> ```
+> 
+> then source your profile to make it works.
+
+
+## Usage
+
+```
+$ anyshortcut
+A blaze fast way to launch your favorite website in Terminal.
+
+USAGE:
+    anyshortcut [ARGS] [SUBCOMMAND]
+
+ARGS:
+    <PRIMARY_KEY | COMPOUND_KEY>
+            Using primary shortcut key (A~Z|0~9) or compound shortcut key (AA~ZZ) to open the url.
+
+    <SECONDARY_KEY>
+            Use secondary shortcut key (A~Z|0~9) to open the url.
+
+
+SUBCOMMANDS:
+    list      List shortcuts.
+    login     Login with the token.
+    logout    Logout and clean local data.
+    sync      Sync all shortcuts after login.
+
+```
+
+- `as <PRIMARY_KEY>`
+
+Using the primary shortcut to launch the website. 
+
+**PRIMARY_KEY** is in the form of a case-insensitive alphanumeric letter range **A ~ Z** or **0 ~ 9**.
+
+For example:
+```
+$ as g
+Url: https://www.google.com/
+```
+
+- `as <COMPOUND_KEY>`
+
+Using the compound shortcut to launch the website.
+
+**COMPOUND_KEY** is in the form of two case-insensitive alphabet letters range **AA ~ ZZ**.
+
+For example:
+```
+$ as db
+Url: https://www.dropbox.com/
+```
+
+- `as <PRIMARY_KEY>|<COMPOUND_KEY> <SECONDARY_KEY>`
+
+Using the secondary shortcut to launch the website.
+
+**SECONDARY_KEY** is in the form of an case-insensitive alphanumeric letter range **A ~ Z** or **0 ~ 9**.
+
+For example:
+```
+$ as g t
+Url: https://translate.google.com/
+```
+
+- `as login [TOKEN]` or `as login` to prompt input `TOKEN`
+
+Login with access token then sync your shortcuts automatically. You can find the access token at 
+official website [Account Profile](https://anyshortcut.com/account#/profile/) -> **API Access**.
+
+- `as sync`
+
+Sync your shortcuts to local manually.
+
+```
+$ as sync
+Syncing your shortcut data...
+
+Shortcuts synced success!
+Primary shortcut number: 120
+Secondary shortcut number: 150
+
+All your data stored at ~/.anyshortcut directory.
+```
+
+- `as list`
+
+List your shortcuts.
+
+```
+USAGE:
+    anyshortcut list [OPTIONS]
+
+OPTIONS:
+    -c, --compound     List all compound shortcuts.
+    -p, --primary      List all primary shortcuts.
+    -s, --secondary    List all secondary shortcuts.
+```
+
+- `as logout`
+
+Logout and all local data will be cleaned.
+
+## Future plans
+
+- [ ] Support bind shortcut
+- [ ] Support delete shortcut
