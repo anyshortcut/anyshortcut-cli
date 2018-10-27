@@ -1,7 +1,7 @@
 use ansi_term::{ANSIString, ANSIStrings, Style};
 use ansi_term::Color::Yellow;
+use storage_derive::Storage;
 use chrono::{TimeZone, Utc};
-use constants;
 use open;
 use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -9,7 +9,8 @@ use std::fmt;
 use std::ops::Deref;
 use store::Storage;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Storage, Serialize, Deserialize, Debug)]
+#[store_at = "meta.json"]
 pub struct Meta {
     pub token: String,
 }
@@ -60,10 +61,12 @@ pub type ShortcutKey = String;
 /// A aliased type for shortcut domain name.
 pub type ShortcutDomain = String;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Storage, Serialize, Deserialize, Debug)]
+#[store_at = "primary.json"]
 pub struct PrimaryShortcutVec(Vec<Shortcut>);
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Storage, Serialize, Deserialize, Debug)]
+#[store_at = "secondary.json"]
 pub struct SecondaryShortcutMap(HashMap<ShortcutDomain, Vec<Shortcut>>);
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -185,23 +188,5 @@ impl Deref for SecondaryShortcutMap {
 
     fn deref(&self) -> &HashMap<ShortcutDomain, Vec<Shortcut>> {
         &self.0
-    }
-}
-
-impl Storage for Meta {
-    fn get_file_name() -> String {
-        constants::META_FILE_NAME.to_string()
-    }
-}
-
-impl Storage for PrimaryShortcutVec {
-    fn get_file_name() -> String {
-        constants::PRIMARY_FILE_NAME.to_string()
-    }
-}
-
-impl Storage for SecondaryShortcutMap {
-    fn get_file_name() -> String {
-        constants::SECONDARY_FILE_NAME.to_string()
     }
 }

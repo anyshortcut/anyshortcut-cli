@@ -11,13 +11,15 @@ build="build.rs"
 curl-http = "0.1.0"
 failure = "0.1.2"
 failure_derive = "0.1.2"
-dirs = "1.0.3"
+dirs = "1.0.4"
 open = "1.2.2"
 serde = "1.0.71"
 serde_derive = "1.0.79"
 serde_json = "1.0.27"
 chrono = "0.4.6"
 ansi_term = "0.11.0"
+
+storage-derive = { path = "./storage-derive" }
 
 [dependencies.clap]
 version = "2.32"

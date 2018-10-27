@@ -1,4 +1,3 @@
-use constants;
 use dirs;
 use failure;
 use failure::Error;
@@ -13,7 +12,7 @@ use std::path::PathBuf;
 pub fn get_store_directory() -> Result<PathBuf, Error> {
     let mut path = dirs::home_dir()
         .ok_or_else(|| failure::err_msg("Could not find home dir"))?;
-    path.push(constants::DIRECTORY_NAME);
+    path.push(".anyshortcut");
     // Create the directory if not exist before write date to file.
     fs::create_dir_all(path.to_str().unwrap())?;
     Ok(path)

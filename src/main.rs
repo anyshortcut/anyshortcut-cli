@@ -11,6 +11,7 @@ extern crate open;
 extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
+extern crate storage_derive;
 
 use clap::ArgMatches;
 use commands::{list, login, logout, sync};
