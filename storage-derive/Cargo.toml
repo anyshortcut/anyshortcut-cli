@@ -1,0 +1,11 @@
+[package]
+name = "storage-derive"
+version = "0.1.0"
+authors = ["Folyd <lyshuhow@gmail.com>"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = "0.15.14"
+quote = "0.6.8"
