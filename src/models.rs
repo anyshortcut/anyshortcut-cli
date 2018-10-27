@@ -3,6 +3,7 @@ use ansi_term::Color::Yellow;
 use chrono::{TimeZone, Utc};
 use constants;
 use open;
+use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt;
 use std::ops::Deref;

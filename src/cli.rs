@@ -1,4 +1,5 @@
 use clap::{App, AppSettings, Arg, SubCommand};
+use clap::{crate_description, crate_name, crate_version};
 
 pub fn build_cli() -> App<'static, 'static> {
     App::new(crate_name!())

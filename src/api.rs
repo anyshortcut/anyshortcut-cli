@@ -1,9 +1,11 @@
+use clap::crate_version;
 use constants;
 use curl_http::{Client, Response, Result};
 use failure::Fail;
 use models::*;
 use serde::de::DeserializeOwned;
 use serde_json;
+use serde_derive::Deserialize;
 use std::fmt;
 use std::rc::Rc;
 

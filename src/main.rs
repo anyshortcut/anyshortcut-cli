@@ -1,19 +1,16 @@
 extern crate ansi_term;
 extern crate chrono;
-#[macro_use]
 extern crate clap;
 extern crate curl_http;
+extern crate dirs;
 extern crate failure;
-#[macro_use]
 extern crate failure_derive;
 #[cfg(test)]
 extern crate itertools;
 extern crate open;
 extern crate serde;
-#[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
-extern crate dirs;
 
 use clap::ArgMatches;
 use commands::{list, login, logout, sync};
