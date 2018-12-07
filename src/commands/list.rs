@@ -1,4 +1,4 @@
-use ansi_term::Color::{Red, Cyan};
+use ansi_term::Color::{Cyan, Red};
 use clap::ArgMatches;
 use failure::Error;
 use models::ShortcutManager;
@@ -6,16 +6,24 @@ use models::ShortcutManager;
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     if matches.is_present("primary") {
         if let Some(shortcuts) = ShortcutManager::get_primary_shortcuts() {
-            shortcuts.iter().for_each(|shortcut| shortcut.pretty_print());
+            shortcuts
+                .iter()
+                .for_each(|shortcut| shortcut.pretty_print());
 
             println!();
-            println!("Total primary shortcut number: {}",
-                     Cyan.paint(shortcuts.len().to_string()));
-            println!("Total primary shortcut open times: {}",
-                     Cyan.paint(shortcuts.iter()
-                         .fold(0, |acc, shortcut| acc + shortcut.open_times)
-                         .to_string()
-                     ));
+            println!(
+                "Total primary shortcut number: {}",
+                Cyan.paint(shortcuts.len().to_string())
+            );
+            println!(
+                "Total primary shortcut open times: {}",
+                Cyan.paint(
+                    shortcuts
+                        .iter()
+                        .fold(0, |acc, shortcut| acc + shortcut.open_times)
+                        .to_string()
+                )
+            );
         } else {
             println!("{}", Red.paint("No primary shortcut found"));
         };
@@ -27,34 +35,51 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
                 println!();
                 println!("[{}]", Cyan.bold().paint(domain));
 
-                shortcuts.iter().for_each(|shortcut| shortcut.pretty_print());
+                shortcuts
+                    .iter()
+                    .for_each(|shortcut| shortcut.pretty_print());
                 total_number += shortcuts.len();
-                total_open_times += shortcuts.iter()
+                total_open_times += shortcuts
+                    .iter()
                     .fold(0, |acc, shortcut| acc + shortcut.open_times);
             }
 
             println!();
-            println!("Total domain number: {}",
-                     Cyan.paint(domain_shortcut_map.len().to_string()));
-            println!("Total secondary shortcut number: {}",
-                     Cyan.paint(total_number.to_string()));
-            println!("Total secondary shortcut open times: {}",
-                     Cyan.paint(total_open_times.to_string()));
+            println!(
+                "Total domain number: {}",
+                Cyan.paint(domain_shortcut_map.len().to_string())
+            );
+            println!(
+                "Total secondary shortcut number: {}",
+                Cyan.paint(total_number.to_string())
+            );
+            println!(
+                "Total secondary shortcut open times: {}",
+                Cyan.paint(total_open_times.to_string())
+            );
         } else {
             println!("{}", Red.paint("No secondary shortcut found."));
         }
     } else if matches.is_present("compound") {
         if let Some(shortcuts) = ShortcutManager::get_compound_shortcuts() {
-            shortcuts.iter().for_each(|shortcut| shortcut.pretty_print());
+            shortcuts
+                .iter()
+                .for_each(|shortcut| shortcut.pretty_print());
 
             println!();
-            println!("Total compound shortcut number: {}",
-                     Cyan.paint(shortcuts.len().to_string()));
-            println!("Total compound shortcut open times: {}",
-                     Cyan.paint(shortcuts.iter()
-                         .fold(0, |acc, shortcut| acc + shortcut.open_times)
-                         .to_string()
-                     ));
+            println!(
+                "Total compound shortcut number: {}",
+                Cyan.paint(shortcuts.len().to_string())
+            );
+            println!(
+                "Total compound shortcut open times: {}",
+                Cyan.paint(
+                    shortcuts
+                        .iter()
+                        .fold(0, |acc, shortcut| acc + shortcut.open_times)
+                        .to_string()
+                )
+            );
         } else {
             println!("{}", Red.paint("No compound shortcut found."));
         }

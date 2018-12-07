@@ -1,17 +1,17 @@
+use std::fs;
+use std::fs::File;
+use std::path::PathBuf;
+
 use dirs;
 use failure;
 use failure::Error;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use serde_json;
-use std::fs;
-use std::fs::File;
-use std::path::PathBuf;
 
 /// Get user storage directory.
 pub fn get_store_directory() -> Result<PathBuf, Error> {
-    let mut path = dirs::home_dir()
-        .ok_or_else(|| failure::err_msg("Could not find home dir"))?;
+    let mut path = dirs::home_dir().ok_or_else(|| failure::err_msg("Could not find home dir"))?;
     path.push(".anyshortcut");
     // Create the directory if not exist before write date to file.
     fs::create_dir_all(path.to_str().unwrap())?;

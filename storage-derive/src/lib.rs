@@ -2,8 +2,9 @@ extern crate proc_macro;
 extern crate quote;
 extern crate syn;
 
-use proc_macro::TokenStream;
 use quote::quote;
+
+use proc_macro::TokenStream;
 
 ///
 /// A small derive procedure macro to implement **Storage** trait.

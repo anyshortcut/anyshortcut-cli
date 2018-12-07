@@ -1,12 +1,14 @@
+use std::fmt;
+use std::rc::Rc;
+
 use clap::crate_version;
 use curl_http::{Client, Response, Result};
 use failure::Fail;
-use models::*;
 use serde::de::DeserializeOwned;
-use serde_json;
 use serde_derive::Deserialize;
-use std::fmt;
-use std::rc::Rc;
+use serde_json;
+
+use models::*;
 
 const API_URL: &str = "https://api.anyshortcut.com";
 
@@ -35,7 +37,6 @@ pub enum ApiErrorKind {
     InvalidToken,
     #[fail(display = "Unknown error.")]
     UnknownError,
-
 }
 
 impl<T: fmt::Display> fmt::Display for ApiResponse<T> {
@@ -76,9 +77,7 @@ impl Api {
     pub fn new() -> Api {
         let mut client = Client::new(API_URL);
         client.set_user_agent(&format!("anyshortcut-cli/{}", crate_version!()));
-        Api {
-            client
-        }
+        Api { client }
     }
 
     /// Returns the current api for the thread.
@@ -87,14 +86,18 @@ impl Api {
     }
 
     pub fn login_with_access_token(&self, access_token: &str) -> Result<serde_json::Value> {
-        let response = self.client.get(&format!("/user/login?access_token={}", access_token))?;
+        let response = self
+            .client
+            .get(&format!("/user/login?access_token={}", access_token))?;
         self.handle_http_response(&response)
     }
 
     pub fn get_all_shortcuts(&self) -> Result<ShortcutData> {
         let access_token = Meta::get_token();
-        let response = self.client.get(
-            &format!("/shortcuts/all?nested=false&access_token={}", access_token))?;
+        let response = self.client.get(&format!(
+            "/shortcuts/all?nested=false&access_token={}",
+            access_token
+        ))?;
         self.handle_http_response(&response)
     }
 
@@ -118,4 +121,3 @@ impl Api {
         }
     }
 }
-

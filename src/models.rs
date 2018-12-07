@@ -1,12 +1,14 @@
-use ansi_term::{ANSIString, ANSIStrings, Style};
-use ansi_term::Color::Yellow;
-use storage_derive::Storage;
-use chrono::{TimeZone, Utc};
-use open;
-use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt;
 use std::ops::Deref;
+
+use ansi_term::{ANSIString, ANSIStrings, Style};
+use ansi_term::Color::Yellow;
+use chrono::{TimeZone, Utc};
+use open;
+use serde_derive::{Deserialize, Serialize};
+use storage_derive::Storage;
+
 use store::Storage;
 
 #[derive(Storage, Serialize, Deserialize, Debug)]
@@ -40,11 +42,18 @@ impl Shortcut {
             Yellow.bold().paint(self.key.to_uppercase()),
             Yellow.paint("]"),
         ];
-        println!("{}  {}", ANSIStrings(key_str), Style::new().bold().paint(&self.title));
+        println!(
+            "{}  {}",
+            ANSIStrings(key_str),
+            Style::new().bold().paint(&self.title)
+        );
 
         println!();
         self.fixed_label_print("Url:", &self.url);
-        self.fixed_label_print("Comment:", self.comment.as_ref().unwrap_or(&String::from("")));
+        self.fixed_label_print(
+            "Comment:",
+            self.comment.as_ref().unwrap_or(&String::from("")),
+        );
         self.fixed_label_print("Domain:", &self.domain);
         self.fixed_label_print("Open times:", &self.open_times);
         self.fixed_label_print("Created at:", Utc.timestamp_millis(self.timestamp));
@@ -79,21 +88,27 @@ pub struct ShortcutManager {}
 
 impl ShortcutManager {
     pub fn get_primary_shortcuts() -> Option<Vec<Shortcut>> {
-        PrimaryShortcutVec::parse().ok()
-            .and_then(|shortcuts| {
-                Some(shortcuts.iter().cloned()
+        PrimaryShortcutVec::parse().ok().and_then(|shortcuts| {
+            Some(
+                shortcuts
+                    .iter()
+                    .cloned()
                     .filter(|shortcut| shortcut.key.len() == 1)
-                    .collect())
-            })
+                    .collect(),
+            )
+        })
     }
 
     pub fn get_compound_shortcuts() -> Option<Vec<Shortcut>> {
-        PrimaryShortcutVec::parse().ok()
-            .and_then(|shortcuts| {
-                Some(shortcuts.iter().cloned()
+        PrimaryShortcutVec::parse().ok().and_then(|shortcuts| {
+            Some(
+                shortcuts
+                    .iter()
+                    .cloned()
                     .filter(|shortcut| shortcut.key.len() == 2)
-                    .collect())
-            })
+                    .collect(),
+            )
+        })
     }
 
     pub fn get_secondary_shortcuts() -> Option<SecondaryShortcutMap> {
@@ -102,11 +117,11 @@ impl ShortcutManager {
 
     pub fn get_primary_by_key(key: &str) -> Option<Shortcut> {
         match PrimaryShortcutVec::parse() {
-            Ok(shortcuts) => {
-                shortcuts.iter().cloned()
-                    .find(|shortcut| shortcut.key.eq_ignore_ascii_case(key))
-            }
-            Err(_) => None
+            Ok(shortcuts) => shortcuts
+                .iter()
+                .cloned()
+                .find(|shortcut| shortcut.key.eq_ignore_ascii_case(key)),
+            Err(_) => None,
         }
     }
 
@@ -114,13 +129,15 @@ impl ShortcutManager {
         match SecondaryShortcutMap::parse() {
             Ok(domain_shortcut_map) => {
                 if let Some(shortcuts) = domain_shortcut_map.get(domain) {
-                    shortcuts.iter().cloned()
+                    shortcuts
+                        .iter()
+                        .cloned()
                         .find(|shortcut| shortcut.key.eq_ignore_ascii_case(key))
                 } else {
                     None
                 }
             }
-            Err(_) => None
+            Err(_) => None,
         }
     }
 
@@ -147,10 +164,16 @@ impl ShortcutManager {
             if let Some(shortcut) = Self::get_secondary_by_domain_key(domain, secondary_key) {
                 Self::open_shortcut(&shortcut);
             } else {
-                println!("No secondary shortcut (key: {}) found.", secondary_key.to_uppercase());
+                println!(
+                    "No secondary shortcut (key: {}) found.",
+                    secondary_key.to_uppercase()
+                );
             }
         } else {
-            println!("Not primary shortcut (key: {}) found.", primary_key.to_uppercase());
+            println!(
+                "Not primary shortcut (key: {}) found.",
+                primary_key.to_uppercase()
+            );
         }
     }
 

@@ -1,5 +1,5 @@
 use std::io;
-use std::io::{Write};
+use std::io::Write;
 
 pub fn prompt_to_continue(message: &str) -> io::Result<bool> {
     loop {

@@ -13,18 +13,20 @@ extern crate serde_derive;
 extern crate serde_json;
 extern crate storage_derive;
 
-use clap::ArgMatches;
-use commands::{list, login, logout, sync};
-use failure::Error;
-use models::ShortcutManager;
 use std::process;
+
+use clap::ArgMatches;
+use failure::Error;
+
+use commands::{list, login, logout, sync};
+use models::ShortcutManager;
 
 mod api;
 mod cli;
 mod commands;
-mod utils;
-mod store;
 mod models;
+mod store;
+mod utils;
 
 fn main() {
     let matches = cli::build_cli().get_matches();
@@ -40,20 +42,15 @@ fn main() {
 
 fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
     match matches.subcommand() {
-        ("login", Some(login_matches)) => {
-            login::execute(&login_matches)?
-        }
-        ("logout", Some(logout_matches)) => {
-            logout::execute(&logout_matches)?
-        }
-        ("sync", Some(sync_matches)) => {
-            sync::execute(&sync_matches)?
-        }
-        ("list", Some(list_matches)) => {
-            list::execute(&list_matches)?
-        }
+        ("login", Some(login_matches)) => login::execute(&login_matches)?,
+        ("logout", Some(logout_matches)) => logout::execute(&logout_matches)?,
+        ("sync", Some(sync_matches)) => sync::execute(&sync_matches)?,
+        ("list", Some(list_matches)) => list::execute(&list_matches)?,
         _ => {
-            match (matches.value_of("primary_key"), matches.value_of("secondary_key")) {
+            match (
+                matches.value_of("primary_key"),
+                matches.value_of("secondary_key"),
+            ) {
                 (Some(primary_key), Some(secondary_key)) => {
                     ShortcutManager::open_secondary(primary_key, secondary_key);
                 }

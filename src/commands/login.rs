@@ -25,7 +25,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
 
     while let Err(error) = handle_login(&ui::prompt("Enter your token:")?) {
         println!("{}", error);
-    };
+    }
 
     Ok(())
 }
@@ -34,9 +34,11 @@ fn handle_login(access_token: &str) -> Result<(), Error> {
     let api = Api::get_current();
     api.login_with_access_token(&access_token).and_then(|_| {
         println!("Valid access token.");
-        Meta { token: access_token.to_string() }
-            .persist()
-            .unwrap_or_else(|error| println!("{}", error));
+        Meta {
+            token: access_token.to_string(),
+        }
+        .persist()
+        .unwrap_or_else(|error| println!("{}", error));
 
         super::sync_all_shortcuts();
         Ok(())

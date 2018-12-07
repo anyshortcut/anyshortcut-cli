@@ -1,5 +1,5 @@
-use clap::{App, AppSettings, Arg, SubCommand};
 use clap::{crate_description, crate_name, crate_version};
+use clap::{App, AppSettings, Arg, SubCommand};
 
 pub fn build_cli() -> App<'static, 'static> {
     App::new(crate_name!())
@@ -95,6 +95,7 @@ fn validate_secondary_key(key: String) -> Result<(), String> {
 mod tests {
     use clap::ErrorKind;
     use itertools::Itertools;
+
     use super::*;
 
     #[test]
@@ -123,4 +124,3 @@ mod tests {
         assert!(res.is_err());
     }
 }
-
