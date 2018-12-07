@@ -72,7 +72,7 @@ pub fn build_cli() -> App<'static, 'static> {
 /// Including one-letter primary key and two-letters compound key.
 fn validate_primary_key(key: String) -> Result<(), String> {
     if key.chars().all(|c| c.is_ascii_alphanumeric()) {
-        if key.len() == 0 || key.len() > 2 {
+        if key.is_empty() || key.len() > 2 {
             return Err(String::from("Invalid key length"));
         }
 

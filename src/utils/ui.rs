@@ -27,7 +27,7 @@ pub fn prompt(message: &str) -> io::Result<String> {
         let mut buffer = String::new();
         io::stdin().read_line(&mut buffer)?;
         let input = buffer.trim();
-        if input.len() > 0 {
+        if !input.is_empty() {
             return Ok(input.to_owned());
         }
     }

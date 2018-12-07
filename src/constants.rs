@@ -1,1 +1,0 @@
-pub const API_URL: &'static str = "https://api.anyshortcut.com";

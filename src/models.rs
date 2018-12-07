@@ -135,7 +135,7 @@ impl ShortcutManager {
 
     pub fn open_primary(key: &str) {
         if let Some(shortcut) = Self::get_primary_by_key(key) {
-            Self::open_shortcut(shortcut);
+            Self::open_shortcut(&shortcut);
         } else {
             println!("Not primary shortcut (key: {}) found.", key.to_uppercase());
         }
@@ -145,7 +145,7 @@ impl ShortcutManager {
         if let Some(primary_shortcut) = Self::get_primary_by_key(primary_key) {
             let domain = &primary_shortcut.domain;
             if let Some(shortcut) = Self::get_secondary_by_domain_key(domain, secondary_key) {
-                Self::open_shortcut(shortcut);
+                Self::open_shortcut(&shortcut);
             } else {
                 println!("No secondary shortcut (key: {}) found.", secondary_key.to_uppercase());
             }
@@ -154,7 +154,7 @@ impl ShortcutManager {
         }
     }
 
-    fn open_shortcut(shortcut: Shortcut) {
+    fn open_shortcut(shortcut: &Shortcut) {
         match open::that(shortcut.url.clone()) {
             Ok(_) => println!("Url: {}", shortcut.url),
             Err(error) => println!("{}", error),

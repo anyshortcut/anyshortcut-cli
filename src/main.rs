@@ -20,7 +20,6 @@ use models::ShortcutManager;
 use std::process;
 
 mod api;
-mod constants;
 mod cli;
 mod commands;
 mod utils;
