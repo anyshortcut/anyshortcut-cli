@@ -82,7 +82,7 @@ impl Api {
 
     /// Returns the current api for the thread.
     pub fn get_current() -> Rc<Api> {
-        API.with(|api| api.clone())
+        API.with(std::clone::Clone::clone)
     }
 
     pub fn login_with_access_token(&self, access_token: &str) -> Result<serde_json::Value> {

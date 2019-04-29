@@ -2,14 +2,14 @@ use ansi_term::Color::{Cyan, Red};
 use clap::ArgMatches;
 use failure::Error;
 
-use crate::models::ShortcutManager;
+use crate::models::{Shortcut, ShortcutManager};
 
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     if matches.is_present("primary") {
         if let Some(shortcuts) = ShortcutManager::get_primary_shortcuts() {
             shortcuts
                 .iter()
-                .for_each(|shortcut| shortcut.pretty_print());
+                .for_each(Shortcut::pretty_print);
 
             println!();
             println!(
@@ -38,7 +38,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
 
                 shortcuts
                     .iter()
-                    .for_each(|shortcut| shortcut.pretty_print());
+                    .for_each(Shortcut::pretty_print);
                 total_number += shortcuts.len();
                 total_open_times += shortcuts
                     .iter()
@@ -65,7 +65,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
         if let Some(shortcuts) = ShortcutManager::get_compound_shortcuts() {
             shortcuts
                 .iter()
-                .for_each(|shortcut| shortcut.pretty_print());
+                .for_each(Shortcut::pretty_print);
 
             println!();
             println!(
