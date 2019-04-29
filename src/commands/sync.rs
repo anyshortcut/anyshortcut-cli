@@ -2,7 +2,7 @@ use ansi_term::Color::Red;
 use clap::ArgMatches;
 use failure::Error;
 
-use models::Meta;
+use crate::models::Meta;
 
 pub fn execute(_: &ArgMatches) -> Result<(), Error> {
     if Meta::has_token() {

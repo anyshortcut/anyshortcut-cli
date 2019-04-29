@@ -8,7 +8,7 @@ use serde::de::DeserializeOwned;
 use serde_derive::Deserialize;
 use serde_json;
 
-use models::*;
+use crate::models::*;
 
 const API_URL: &str = "https://api.anyshortcut.com";
 

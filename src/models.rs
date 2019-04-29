@@ -2,14 +2,14 @@ use std::collections::HashMap;
 use std::fmt;
 use std::ops::Deref;
 
-use ansi_term::{ANSIString, ANSIStrings, Style};
 use ansi_term::Color::Yellow;
+use ansi_term::{ANSIString, ANSIStrings, Style};
 use chrono::{TimeZone, Utc};
 use open;
 use serde_derive::{Deserialize, Serialize};
 use storage_derive::Storage;
 
-use store::Storage;
+use crate::store::Storage;
 
 #[derive(Storage, Serialize, Deserialize, Debug)]
 #[store_at = "meta.json"]

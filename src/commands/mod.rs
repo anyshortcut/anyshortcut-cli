@@ -1,6 +1,6 @@
+use crate::api::Api;
+use crate::store::{self, Storage};
 use ansi_term::Color::{Cyan, Green};
-use api::Api;
-use store::{self, Storage};
 
 pub mod list;
 pub mod login;

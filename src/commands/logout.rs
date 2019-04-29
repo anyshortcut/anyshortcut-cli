@@ -1,8 +1,8 @@
 use clap::ArgMatches;
 use failure::Error;
 
-use models::*;
-use store::Storage;
+use crate::models::*;
+use crate::store::Storage;
 
 pub fn execute(_: &ArgMatches) -> Result<(), Error> {
     Meta::clear()?;

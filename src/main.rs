@@ -18,8 +18,8 @@ use std::process;
 use clap::ArgMatches;
 use failure::Error;
 
-use commands::{list, login, logout, sync};
-use models::ShortcutManager;
+use crate::commands::{list, login, logout, sync};
+use crate::models::ShortcutManager;
 
 mod api;
 mod cli;
