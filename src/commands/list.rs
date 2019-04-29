@@ -1,7 +1,8 @@
-use crate::models::ShortcutManager;
 use ansi_term::Color::{Cyan, Red};
 use clap::ArgMatches;
 use failure::Error;
+
+use crate::models::ShortcutManager;
 
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     if matches.is_present("primary") {

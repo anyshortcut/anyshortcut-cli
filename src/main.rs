@@ -1,18 +1,3 @@
-extern crate ansi_term;
-extern crate chrono;
-extern crate clap;
-extern crate curl_http;
-extern crate dirs;
-extern crate failure;
-extern crate failure_derive;
-#[cfg(test)]
-extern crate itertools;
-extern crate open;
-extern crate serde;
-extern crate serde_derive;
-extern crate serde_json;
-extern crate storage_derive;
-
 use std::process;
 
 use clap::ArgMatches;

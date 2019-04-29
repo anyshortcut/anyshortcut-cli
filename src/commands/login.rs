@@ -1,10 +1,11 @@
+use clap::ArgMatches;
+use failure::Error;
+use open;
+
 use crate::api::Api;
 use crate::models::Meta;
 use crate::store::Storage;
 use crate::utils::ui;
-use clap::ArgMatches;
-use failure::Error;
-use open;
 
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     if let Some(access_token) = matches.value_of("token") {

@@ -1,12 +1,11 @@
-use std::collections::HashMap;
-use std::fmt;
-use std::ops::Deref;
-
-use ansi_term::Color::Yellow;
 use ansi_term::{ANSIString, ANSIStrings, Style};
+use ansi_term::Color::Yellow;
 use chrono::{TimeZone, Utc};
 use open;
 use serde_derive::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::fmt;
+use std::ops::Deref;
 use storage_derive::Storage;
 
 use crate::store::Storage;

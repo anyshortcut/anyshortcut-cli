@@ -6,6 +6,7 @@ description="A blaze fast way to launch your favorite website in Terminal."
 homepage = "https://github.com/anyshortcut/anyshortcut-cli"
 license = "MIT OR Apache-2.0"
 build="build.rs"
+edition="2018"
 
 [dependencies]
 curl-http = "0.1.0"
