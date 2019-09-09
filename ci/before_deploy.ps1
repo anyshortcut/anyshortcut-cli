@@ -1,6 +1,8 @@
-cargo build --release
-mkdir staging
-copy target\release\anyshortcut.exe staging
-copy target\release\build\*\out\_anyshortcut.ps1 staging
-cd staging
-7z a ../%PROJECT_NAME%-%TRAVIS_TAG%-%TARGET%.zip *
+New-Item -ItemType Directory -Name temp
+Copy-Item README.md temp
+Copy-Item LICENSE-MIT temp
+Copy-Item LICENSE-APACHE temp
+Get-ChildItem target\$Env:TARGET\release
+Copy-Item target\$Env:TARGET\release\$Env:PROJECT_NAME.exe temp
+7z a $Env:PROJECT_NAME-$Env:TRAVIS_TAG-$Env:TARGET.zip temp\*
+Get-ChildItem
