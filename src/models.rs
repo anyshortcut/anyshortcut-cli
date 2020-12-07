@@ -1,7 +1,6 @@
-use ansi_term::{ANSIString, ANSIStrings, Style};
 use ansi_term::Color::Yellow;
+use ansi_term::{ANSIString, ANSIStrings, Style};
 use chrono::{TimeZone, Utc};
-use open;
 use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt;
@@ -87,26 +86,22 @@ pub struct ShortcutManager {}
 
 impl ShortcutManager {
     pub fn get_primary_shortcuts() -> Option<Vec<Shortcut>> {
-        PrimaryShortcutVec::parse().ok().and_then(|shortcuts| {
-            Some(
-                shortcuts
-                    .iter()
-                    .cloned()
-                    .filter(|shortcut| shortcut.key.len() == 1)
-                    .collect(),
-            )
+        PrimaryShortcutVec::parse().ok().map(|shortcuts| {
+            shortcuts
+                .iter()
+                .cloned()
+                .filter(|shortcut| shortcut.key.len() == 1)
+                .collect()
         })
     }
 
     pub fn get_compound_shortcuts() -> Option<Vec<Shortcut>> {
-        PrimaryShortcutVec::parse().ok().and_then(|shortcuts| {
-            Some(
-                shortcuts
-                    .iter()
-                    .cloned()
-                    .filter(|shortcut| shortcut.key.len() == 2)
-                    .collect(),
-            )
+        PrimaryShortcutVec::parse().ok().map(|shortcuts| {
+            shortcuts
+                .iter()
+                .cloned()
+                .filter(|shortcut| shortcut.key.len() == 2)
+                .collect()
         })
     }
 

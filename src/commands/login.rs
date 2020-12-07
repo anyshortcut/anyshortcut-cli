@@ -1,6 +1,5 @@
 use clap::ArgMatches;
 use failure::Error;
-use open;
 
 use crate::api::Api;
 use crate::models::Meta;
@@ -33,7 +32,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
 
 fn handle_login(access_token: &str) -> Result<(), Error> {
     let api = Api::get_current();
-    api.login_with_access_token(&access_token).and_then(|_| {
+    api.login_with_access_token(&access_token).map(|_| {
         println!("Valid access token.");
         Meta {
             token: access_token.to_string(),
@@ -42,6 +41,5 @@ fn handle_login(access_token: &str) -> Result<(), Error> {
         .unwrap_or_else(|error| println!("{}", error));
 
         super::sync_all_shortcuts();
-        Ok(())
     })
 }

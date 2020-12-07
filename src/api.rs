@@ -6,7 +6,6 @@ use curl_http::{Client, Response, Result};
 use failure::Fail;
 use serde::de::DeserializeOwned;
 use serde_derive::Deserialize;
-use serde_json;
 
 use crate::models::*;
 

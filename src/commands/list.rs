@@ -7,9 +7,7 @@ use crate::models::{Shortcut, ShortcutManager};
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     if matches.is_present("primary") {
         if let Some(shortcuts) = ShortcutManager::get_primary_shortcuts() {
-            shortcuts
-                .iter()
-                .for_each(Shortcut::pretty_print);
+            shortcuts.iter().for_each(Shortcut::pretty_print);
 
             println!();
             println!(
@@ -36,9 +34,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
                 println!();
                 println!("[{}]", Cyan.bold().paint(domain));
 
-                shortcuts
-                    .iter()
-                    .for_each(Shortcut::pretty_print);
+                shortcuts.iter().for_each(Shortcut::pretty_print);
                 total_number += shortcuts.len();
                 total_open_times += shortcuts
                     .iter()
@@ -63,9 +59,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
         }
     } else if matches.is_present("compound") {
         if let Some(shortcuts) = ShortcutManager::get_compound_shortcuts() {
-            shortcuts
-                .iter()
-                .for_each(Shortcut::pretty_print);
+            shortcuts.iter().for_each(Shortcut::pretty_print);
 
             println!();
             println!(
