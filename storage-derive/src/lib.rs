@@ -31,7 +31,7 @@ fn impl_derive_storage_macro(derive_input: &syn::DeriveInput) -> TokenStream {
     let gen = quote! {
         impl Storage for #name {
             fn get_file_name() -> String {
-                stringify!(#file_name).to_string()
+                #file_name.to_string()
             }
         }
     };
