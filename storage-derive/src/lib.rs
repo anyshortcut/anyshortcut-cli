@@ -40,10 +40,9 @@ fn impl_derive_storage_macro(derive_input: &syn::DeriveInput) -> TokenStream {
 
 fn get_meta_items(attr: &syn::Attribute) -> Option<syn::MetaNameValue> {
     if let Ok(syn::Meta::NameValue(meta_name_value)) = attr.parse_meta() {
-        if meta_name_value.ident == "store_at" {
-            Some(meta_name_value)
-        } else {
-            None
+        match meta_name_value.path.get_ident() {
+            Some(ident) if ident == "store_at" => Some(meta_name_value),
+            _ => None
         }
     } else {
         None
