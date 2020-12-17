@@ -3,6 +3,7 @@ name = "storage-derive"
 version = "0.1.0"
 authors = ["Folyd <lyshuhow@gmail.com>"]
 edition = "2018"
+publish = false
 
 [lib]
 proc-macro = true

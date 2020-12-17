@@ -2,14 +2,19 @@
 name = "anyshortcut"
 version = "0.2.0"
 authors = ["Folyd <lyshuhow@gmail.com>"]
-description="A blaze fast way to launch your favorite website in Terminal."
+description = "A blaze fast way to launch your favorite website in Terminal."
 homepage = "https://github.com/anyshortcut/anyshortcut-cli"
 license = "MIT OR Apache-2.0"
-build="build.rs"
-edition="2018"
+build = "build.rs"
+edition = "2018"
+
+[workspace]
+members = [
+    "curl-http",
+    "storage-derive",
+]
 
 [dependencies]
-curl-http = "0.1.0"
 failure = "0.1.2"
 failure_derive = "0.1.2"
 dirs = "1.0.4"
@@ -21,11 +26,12 @@ chrono = "0.4.6"
 ansi_term = "0.11.0"
 
 storage-derive = { path = "./storage-derive" }
+curl-http = { path = "./curl-http" }
 
 [dependencies.clap]
 version = "2.32"
 default-features = false
-features = [ "color", "vec_map" ]
+features = ["color", "vec_map"]
 
 [dev-dependencies]
 itertools = "0.7.8"
