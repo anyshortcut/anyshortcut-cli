@@ -25,8 +25,11 @@ pub fn derive_storage(input: TokenStream) -> TokenStream {
 fn impl_derive_storage_macro(derive_input: &syn::DeriveInput) -> TokenStream {
     let name = &derive_input.ident;
 
-    let store_at: &syn::MetaNameValue = &derive_input.attrs.iter()
-        .find_map(get_meta_items).expect("Expect a store_at attribute");
+    let store_at: &syn::MetaNameValue = &derive_input
+        .attrs
+        .iter()
+        .find_map(get_meta_items)
+        .expect("Expect a store_at attribute");
     let file_name = &store_at.lit;
     let gen = quote! {
         impl Storage for #name {
@@ -42,7 +45,7 @@ fn get_meta_items(attr: &syn::Attribute) -> Option<syn::MetaNameValue> {
     if let Ok(syn::Meta::NameValue(meta_name_value)) = attr.parse_meta() {
         match meta_name_value.path.get_ident() {
             Some(ident) if ident == "store_at" => Some(meta_name_value),
-            _ => None
+            _ => None,
         }
     } else {
         None
