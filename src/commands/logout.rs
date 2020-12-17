@@ -1,10 +1,9 @@
 use clap::ArgMatches;
-use failure::Error;
 
 use crate::models::*;
 use crate::store::Storage;
 
-pub fn execute(_: &ArgMatches) -> Result<(), Error> {
+pub fn execute(_: &ArgMatches) -> anyhow::Result<()> {
     Meta::clear()?;
     PrimaryShortcutVec::clear()?;
     SecondaryShortcutMap::clear()?;

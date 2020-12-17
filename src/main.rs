@@ -1,7 +1,6 @@
 use std::process;
 
 use clap::ArgMatches;
-use failure::Error;
 
 use crate::commands::{list, login, logout, sync};
 use crate::models::ShortcutManager;
@@ -25,7 +24,7 @@ fn main() {
     };
 }
 
-fn handle_matches(matches: &ArgMatches) -> Result<(), Error> {
+fn handle_matches(matches: &ArgMatches) -> anyhow::Result<()> {
     match matches.subcommand() {
         ("login", Some(login_matches)) => login::execute(&login_matches)?,
         ("logout", Some(logout_matches)) => logout::execute(&logout_matches)?,

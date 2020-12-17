@@ -15,8 +15,6 @@ members = [
 ]
 
 [dependencies]
-failure = "0.1.2"
-failure_derive = "0.1.2"
 dirs = "1.0.4"
 open = "1.2.2"
 serde = "1.0.71"
@@ -27,6 +25,8 @@ ansi_term = "0.11.0"
 
 storage-derive = { path = "./storage-derive" }
 curl-http = { path = "./curl-http" }
+thiserror = "1.0.22"
+anyhow = "1.0.35"
 
 [dependencies.clap]
 version = "2.32"

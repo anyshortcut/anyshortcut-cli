@@ -1,12 +1,12 @@
 use clap::ArgMatches;
-use failure::Error;
 
 use crate::api::Api;
 use crate::models::Meta;
 use crate::store::Storage;
 use crate::utils::ui;
+use anyhow::Result;
 
-pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
+pub fn execute(matches: &ArgMatches) -> Result<()> {
     if let Some(access_token) = matches.value_of("token") {
         return handle_login(access_token);
     }
@@ -30,7 +30,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     Ok(())
 }
 
-fn handle_login(access_token: &str) -> Result<(), Error> {
+fn handle_login(access_token: &str) -> Result<()> {
     let api = Api::get_current();
     api.login_with_access_token(&access_token).map(|_| {
         println!("Valid access token.");

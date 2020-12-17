@@ -1,10 +1,9 @@
 use ansi_term::Color::{Cyan, Red};
 use clap::ArgMatches;
-use failure::Error;
 
 use crate::models::{Shortcut, ShortcutManager};
 
-pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
+pub fn execute(matches: &ArgMatches) -> anyhow::Result<()> {
     if matches.is_present("primary") {
         if let Some(shortcuts) = ShortcutManager::get_primary_shortcuts() {
             shortcuts.iter().for_each(Shortcut::pretty_print);

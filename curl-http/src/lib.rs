@@ -2,16 +2,12 @@ use std::cell::{RefCell, RefMut};
 use std::fmt;
 use std::io::{Read, Write};
 
-use curl;
-// Magic failure::ResultExt which has context method
-// and implements for std::result::Result
-use failure::{self, Backtrace, Context, Fail, ResultExt};
-use serde::{self, Serialize};
 use serde::de::DeserializeOwned;
-use serde_json;
+use serde::{self, Serialize};
+use thiserror::Error;
 
 /// Shortcut alias for results of this module.
-pub type Result<T> = std::result::Result<T, failure::Error>;
+pub type Result<T> = std::result::Result<T, RequestError>;
 
 /// A enum represents HTTP methods.
 #[derive(PartialEq, Debug)]
@@ -148,8 +144,7 @@ impl<'a> Request<'a> {
     pub fn with_json_body<S: Serialize>(mut self, body: &S) -> Result<Request<'a>> {
         let mut body_bytes: Vec<u8> = vec![];
         // Serialize json object to bytes
-        serde_json::to_writer(&mut body_bytes, &body)
-            .context(ErrorKind::InvalidJsonBody)?;
+        serde_json::to_writer(&mut body_bytes, &body).map_err(|_| RequestError::InvalidJsonBody)?;
 
         self.body = Some(body_bytes);
         self.headers.append("Content-Type: application/json")?;
@@ -170,14 +165,15 @@ impl<'a> Request<'a> {
                     body.read(buffer).unwrap_or(0)
                 })
             }
-            None => handle_request(&mut self.handle, &mut |_| 0)
+            None => handle_request(&mut self.handle, &mut |_| 0),
         }
     }
 }
 
 fn handle_request(
     handle: &mut curl::easy::Easy,
-    read: &mut dyn FnMut(&mut [u8]) -> usize) -> Result<Response> {
+    read: &mut dyn FnMut(&mut [u8]) -> usize,
+) -> Result<Response> {
     let mut response_body = vec![];
     let mut response_headers = vec![];
 
@@ -237,65 +233,22 @@ impl Response {
             Ok(serde_json::from_reader(match self.body {
                 Some(ref body) => body,
                 None => &b""[..],
-            }).context(ErrorKind::InvalidJson)?)
+            })
+                .map_err(|_| RequestError::InvalidJson)?)
         } else {
-            Err(ErrorKind::RequestFailed.into())
+            Err(RequestError::RequestFailed)
         }
     }
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
-pub enum ErrorKind {
-    #[fail(display = "Request failed")]
+#[derive(Error, Debug)]
+pub enum RequestError {
+    #[error(transparent)]
+    CurlError(#[from] curl::Error),
+    #[error("Request failed")]
     RequestFailed,
-    #[fail(display = "Could not serialize value as JSON")]
+    #[error("Could not serialize value as JSON")]
     InvalidJsonBody,
-    #[fail(display = "Could not parse JSON response")]
+    #[error("Could not parse JSON response")]
     InvalidJson,
-}
-
-/// Curl http error.
-#[derive(Debug)]
-pub struct Error {
-    inner: Context<ErrorKind>,
-}
-
-impl self::Error {
-    pub fn kind(&self) -> ErrorKind {
-        *self.inner.get_context()
-    }
-}
-
-impl Fail for self::Error {
-    fn cause(&self) -> Option<&dyn Fail> {
-        self.inner.cause()
-    }
-
-    fn backtrace(&self) -> Option<&Backtrace> {
-        self.inner.backtrace()
-    }
-}
-
-impl fmt::Display for self::Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Display::fmt(&self.inner, f)
-    }
-}
-
-impl From<ErrorKind> for self::Error {
-    fn from(kind: ErrorKind) -> self::Error {
-        self::Error { inner: Context::new(kind) }
-    }
-}
-
-impl From<Context<ErrorKind>> for self::Error {
-    fn from(inner: Context<ErrorKind>) -> self::Error {
-        self::Error { inner }
-    }
-}
-
-impl From<curl::Error> for self::Error {
-    fn from(error: curl::Error) -> self::Error {
-        failure::Error::from(error).context(ErrorKind::RequestFailed).into()
-    }
 }

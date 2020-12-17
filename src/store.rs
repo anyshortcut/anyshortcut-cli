@@ -1,4 +1,4 @@
-use failure::Error;
+use anyhow::{anyhow, Result};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::fs;
@@ -6,8 +6,8 @@ use std::fs::File;
 use std::path::PathBuf;
 
 /// Get user storage directory.
-pub fn get_store_directory() -> Result<PathBuf, Error> {
-    let mut path = dirs::home_dir().ok_or_else(|| failure::err_msg("Could not find home dir"))?;
+pub fn get_store_directory() -> Result<PathBuf> {
+    let mut path = dirs::home_dir().ok_or_else(|| anyhow!("Could not find home dir"))?;
     path.push(".anyshortcut");
     // Create the directory if not exist before write date to file.
     fs::create_dir_all(path.to_str().unwrap())?;
@@ -20,7 +20,7 @@ pub trait Storage: Serialize + DeserializeOwned {
     /// Get storage file name.
     fn get_file_name() -> String;
 
-    fn persist(&self) -> Result<(), Error> {
+    fn persist(&self) -> Result<()> {
         let mut path = get_store_directory()?;
         path.push(Self::get_file_name());
 
@@ -29,7 +29,7 @@ pub trait Storage: Serialize + DeserializeOwned {
         Ok(())
     }
 
-    fn parse() -> Result<Self, Error> {
+    fn parse() -> Result<Self> {
         let mut path = get_store_directory()?;
         path.push(Self::get_file_name());
 
@@ -37,7 +37,7 @@ pub trait Storage: Serialize + DeserializeOwned {
         Ok(serde_json::from_reader(file)?)
     }
 
-    fn clear() -> Result<(), Error> {
+    fn clear() -> Result<()> {
         let mut path = get_store_directory()?;
         path.push(Self::get_file_name());
 

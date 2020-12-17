@@ -1,11 +1,13 @@
 use std::fmt;
 use std::rc::Rc;
 
+use anyhow::{Context, Result};
 use clap::crate_version;
-use curl_http::{Client, Response, Result};
-use failure::Fail;
 use serde::de::DeserializeOwned;
 use serde_derive::Deserialize;
+use thiserror::Error;
+
+use curl_http::{Client, Response};
 
 use crate::models::*;
 
@@ -22,19 +24,19 @@ pub struct ApiResponse<T> {
     pub message: String,
 }
 
-#[derive(Debug, Fail)]
+#[derive(Debug, Error)]
 pub struct ApiError {
     pub code: u32,
     pub message: String,
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
+#[derive(Copy, Clone, Eq, PartialEq, Debug, Error)]
 pub enum ApiErrorKind {
-    #[fail(display = "Access token required.")]
+    #[error("Access token required.")]
     AccessTokenRequired,
-    #[fail(display = "Invalid access token.")]
+    #[error("Invalid access token.")]
     InvalidToken,
-    #[fail(display = "Unknown error.")]
+    #[error("Unknown error.")]
     UnknownError,
 }
 
@@ -108,15 +110,9 @@ impl Api {
                 let response = response.deserialize::<ApiResponse<T>>()?;
                 Ok(response.data)
             }
-            1000 => Err(ApiError::from(api_response)
-                .context(ApiErrorKind::AccessTokenRequired)
-                .into()),
-            1001 | 1002 => Err(ApiError::from(api_response)
-                .context(ApiErrorKind::InvalidToken)
-                .into()),
-            _ => Err(ApiError::from(api_response)
-                .context(ApiErrorKind::UnknownError)
-                .into()),
+            1000 => Err(ApiError::from(api_response)).context(ApiErrorKind::AccessTokenRequired),
+            1001 | 1002 => Err(ApiError::from(api_response)).context(ApiErrorKind::InvalidToken),
+            _ => Err(ApiError::from(api_response)).context(ApiErrorKind::UnknownError),
         }
     }
 }
